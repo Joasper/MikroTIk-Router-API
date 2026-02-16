@@ -8,6 +8,7 @@ public class MikroCleanContext : DbContext
     public MikroCleanContext(DbContextOptions<MikroCleanContext> opts) : base(opts)
     {
         
+        
     }
 
     public DbSet<Device> Devices { get; set; }

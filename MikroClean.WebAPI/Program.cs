@@ -1,4 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using MikroClean.InversionOfControl;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+// Add dependency injection for services and repositories
+builder.Services.AddDependencies();
+
+// Add DbContext 
+builder.Services.AddMikroCleanContext(builder.Configuration);
+
+// Automatically apply pending migrations to the database on application startup
+builder.Services.AutomaticMigrate();
 
 // Add services to the container.
 

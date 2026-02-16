@@ -13,7 +13,7 @@ namespace MikroClean.Infrastructure.Repositories.UOW
         }
         public void Dispose()
         {
-            throw new NotImplementedException();
+            ctx.Dispose();
         }
 
         public async Task<int> SaveChangesAsync()

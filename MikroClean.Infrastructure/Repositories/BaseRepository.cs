@@ -14,7 +14,7 @@ namespace MikroClean.Infrastructure.Repositories
         {
             this.ctx = ctx;
         }
-        public async Task AddAsync(T entity)
+        public async void Add(T entity)
         {
             await ctx.Set<T>().AddAsync(entity);
         }

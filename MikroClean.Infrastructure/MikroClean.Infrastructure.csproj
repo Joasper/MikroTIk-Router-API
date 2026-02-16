@@ -19,4 +19,8 @@
     <ProjectReference Include="..\MikroClean.Domain\MikroClean.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>
