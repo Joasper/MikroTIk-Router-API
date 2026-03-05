@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "augSU9S52NM=",
+  "dgSpecHash": "oo1TjKRClTY=",
   "success": true,
   "projectFilePath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
   "expectedPackageFiles": [
@@ -60,15 +60,5 @@
     "C:\\Users\\Joasper\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\Joasper\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1900",
-      "level": "Warning",
-      "message": "Error al obtener los datos de vulnerabilidad del paquete: No se puede cargar el índice de servicio del origen https://api.nuget.org/v3/index.json.",
-      "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
-      "warningLevel": 1,
-      "filePath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
-      "targetGraphs": []
-    }
-  ]
+  "logs": []
 }
