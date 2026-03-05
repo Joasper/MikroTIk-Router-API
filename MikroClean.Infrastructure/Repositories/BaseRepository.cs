@@ -2,6 +2,7 @@
 using MikroClean.Domain.Entities.Base;
 using MikroClean.Domain.Interfaces.Base;
 using MikroClean.Infrastructure.Context;
+using System.Linq.Expressions;
 
 namespace MikroClean.Infrastructure.Repositories
 {
@@ -26,10 +27,14 @@ namespace MikroClean.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync() => await ctx.Set<T>().ToListAsync();
 
-        public Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByExpressionAsync(Expression<Func<T, bool>> expression)
         {
-            var entity = ctx.Set<T>().FirstOrDefault(t => t.Id == id);
-            return Task.FromResult(entity);
+            return await ctx.Set<T>().FirstOrDefaultAsync(expression);
+        }
+
+        public async Task<T?> GetByIdAsync(int id)
+        {
+            return await ctx.Set<T>().FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public void UpdateAsync(T entity)

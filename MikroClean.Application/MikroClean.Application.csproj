@@ -10,4 +10,8 @@
     <ProjectReference Include="..\MikroClean.Domain\MikroClean.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
 </Project>

@@ -1,10 +1,9 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MikroClean.Application.Interfaces;
 using MikroClean.Application.Services;
-using MikroClean.Domain.Interfaces;
+using MikroClean.Domain.Interfaces.Repositories;
 using MikroClean.Domain.Interfaces.UOW;
 using MikroClean.Infrastructure.Context;
 using MikroClean.Infrastructure.Repositories;
@@ -16,28 +15,27 @@ namespace MikroClean.InversionOfControl
     {
         public static IServiceCollection AddDependencies(this IServiceCollection services)
         {
-
-            services.AddScoped<IDeviceService, DeviceService>();
-
-            services.AddScoped<IDeviceRepository, DeviceRepository>();
+            // Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            
+            // Repositories
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            
+            // Services
+            services.AddScoped<IOrganizationService, OrganizationService>();
+            
             return services;
         }
 
         public static IServiceCollection AddMikroCleanContext(this IServiceCollection services, IConfiguration configuration) 
         {
-            // Get connection string from configuration
             var connectionString = configuration.GetConnectionString("Connection");
-
-            // Add DbContext
             services.AddDbContext<MikroCleanContext>(options => options.UseSqlServer(connectionString));
-
             return services;
         }
+        
         public static IServiceCollection AutomaticMigrate(this IServiceCollection services)
         {
-           
-            // Build a temporary service provider to get the DbContext
             var serviceProvider = services.BuildServiceProvider();
             using (var scope = serviceProvider.CreateScope())
             {

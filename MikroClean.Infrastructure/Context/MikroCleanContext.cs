@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MikroClean.Domain.Entities;
+using MikroClean.Infrastructure.Data;
 
 namespace MikroClean.Infrastructure.Context;
 
@@ -7,22 +8,32 @@ public class MikroCleanContext : DbContext
 {
     public MikroCleanContext(DbContextOptions<MikroCleanContext> opts) : base(opts)
     {
-        
-        
     }
 
-    public DbSet<Device> Devices { get; set; }
+    // DbSets
+    public DbSet<Organizations> Organizations { get; set; }
+    public DbSet<License> Licenses { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Router> Routers { get; set; }
+    public DbSet<SystemRole> SystemRoles { get; set; }
+    public DbSet<SystemPermission> SystemPermissions { get; set; }
+    public DbSet<SystemRolePermission> SystemRolePermissions { get; set; }
+    public DbSet<RouterRole> RouterRoles { get; set; }
+    public DbSet<RouterPermission> RouterPermissions { get; set; }
+    public DbSet<RouterRolePermission> RouterRolePermissions { get; set; }
+    public DbSet<UserRouterAccess> UserRouterAccess { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
+    public DbSet<RouterStatus> RouterStatus { get; set; }
+    public DbSet<AuditLog> AuditLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Device>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Name).IsRequired().HasMaxLength(100).HasColumnType("varchar");
-            entity.Property(e => e.Model).IsRequired().HasMaxLength(100);
-        });
+        // Apply all configurations
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MikroCleanContext).Assembly);
+
+        // Seed initial data
+        SeedData.Seed(modelBuilder);
 
         base.OnModelCreating(modelBuilder);
-
     }
 }
