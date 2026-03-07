@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,3 +20,21 @@ namespace MikroClean.Domain.Entities
         public DateTime CreatedAt { get; set; }
     }
 }
+=======
+﻿using MikroClean.Domain.Entities.Base;
+
+public class Router : BaseEntity
+{
+    public string Name { get; set; }
+
+    public string Ip { get; set; }
+
+    public string User { get; set; }
+
+    public string EncryptedPassword { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public int OrganizationId { get; set; }
+}
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a

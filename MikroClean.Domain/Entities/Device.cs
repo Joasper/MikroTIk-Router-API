@@ -1,4 +1,6 @@
-﻿using MikroClean.Domain.Entities.Base;
+﻿
+
+using MikroClean.Domain.Entities.Base;
 
 namespace MikroClean.Domain.Entities
 {

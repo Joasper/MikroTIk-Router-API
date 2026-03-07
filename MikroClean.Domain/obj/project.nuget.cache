@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
   "dgSpecHash": "nYalFvWB2HI=",
   "success": true,
   "projectFilePath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+=======
+  "dgSpecHash": "TeFJmhuF8uk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
   "expectedPackageFiles": [],
   "logs": []
 }

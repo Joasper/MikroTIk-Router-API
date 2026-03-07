@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj": {}
   },
   "projects": {
@@ -12,13 +13,27 @@
         "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
         "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\obj\\",
+=======
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
+        "projectName": "MikroClean.Application",
+        "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\obj\\",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -32,8 +47,13 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
                 "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+=======
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
               }
             }
           }
@@ -73,6 +93,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -81,13 +102,24 @@
         "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
         "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\obj\\",
+=======
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+        "projectName": "MikroClean.Domain",
+        "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\obj\\",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -138,6 +170,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -146,13 +179,24 @@
         "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
         "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\obj\\",
+=======
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
+        "projectName": "MikroClean.Infrastructure",
+        "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\obj\\",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -166,8 +210,13 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
                 "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+=======
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
               }
             }
           }
@@ -223,6 +272,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -231,13 +281,24 @@
         "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
         "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\obj\\",
+=======
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
+        "projectName": "MikroClean.InversionOfControl",
+        "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\obj\\",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -251,6 +312,7 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
                 "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj"
               },
@@ -259,6 +321,16 @@
               },
               "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
                 "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj"
+=======
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj"
+              },
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+              },
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj"
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
               }
             }
           }
@@ -298,6 +370,7 @@
         }
       }
     },
+<<<<<<< HEAD
     "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -306,13 +379,24 @@
         "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj",
         "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\obj\\",
+=======
+    "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj",
+        "projectName": "MikroClean.WebAPI",
+        "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\MikroClean.WebAPI.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\obj\\",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
+<<<<<<< HEAD
           "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+=======
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -326,8 +410,13 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+<<<<<<< HEAD
               "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
                 "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj"
+=======
+              "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
+                "projectPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj"
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
               }
             }
           }

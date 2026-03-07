@@ -15,7 +15,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9fbc1059982a8480f25cc91f2ae24fb37ca2a694")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2ce11ac92cc9a93cc7bdc8c2f6f7bdf269694b45")]
+>>>>>>> e1056afd14ae74e31ac22d88efc9bbabc0f9e09a
 [assembly: System.Reflection.AssemblyProductAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
