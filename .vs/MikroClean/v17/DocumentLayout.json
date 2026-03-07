@@ -1,14 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\",
+  "WorkspaceRootPath": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\organizations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\hp\\onedrive\\documentos\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\routers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\entities\\routers.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\hp\\onedrive\\documentos\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\notifications.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\entities\\notifications.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\hp\\onedrive\\documentos\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\organizations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\entities\\organizations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\base\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\hp\\onedrive\\documentos\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\base\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\entities\\base\\baseentity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\hp\\onedrive\\documentos\\github\\mikrotik-router-api\\mikroclean.domain\\entities\\device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\entities\\device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,30 +30,69 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Routers.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Routers.cs",
+              "RelativeDocumentMoniker": "MikroClean.Domain\\Entities\\Routers.cs",
+              "ToolTip": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Routers.cs",
+              "RelativeToolTip": "MikroClean.Domain\\Entities\\Routers.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T01:26:00.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 1,
+              "Title": "Notifications.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Notifications.cs",
+              "RelativeDocumentMoniker": "MikroClean.Domain\\Entities\\Notifications.cs",
+              "ToolTip": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Notifications.cs",
+              "RelativeToolTip": "MikroClean.Domain\\Entities\\Notifications.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T01:06:29.46Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Device.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Device.cs",
+              "RelativeDocumentMoniker": "MikroClean.Domain\\Entities\\Device.cs",
+              "ToolTip": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Device.cs",
+              "RelativeToolTip": "MikroClean.Domain\\Entities\\Device.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-07T00:59:07.135Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "BaseEntity.cs",
-              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
               "RelativeDocumentMoniker": "MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
-              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
+              "ToolTip": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
               "RelativeToolTip": "MikroClean.Domain\\Entities\\Base\\BaseEntity.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAABCAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-05T22:32:29.885Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Organizations.cs",
-              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Organizations.cs",
+              "DocumentMoniker": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Organizations.cs",
               "RelativeDocumentMoniker": "MikroClean.Domain\\Entities\\Organizations.cs",
-              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Organizations.cs",
+              "ToolTip": "C:\\Users\\HP\\OneDrive\\Documentos\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\Entities\\Organizations.cs",
               "RelativeToolTip": "MikroClean.Domain\\Entities\\Organizations.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-05T22:30:42.813Z",
               "EditorCaption": ""
