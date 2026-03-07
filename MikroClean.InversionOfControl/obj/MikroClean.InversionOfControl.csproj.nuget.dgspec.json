@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {}
+    "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
+    "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
         "projectName": "MikroClean.Application",
-        "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
-        "packagesPath": "C:\\Users\\Joasper\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\obj\\",
+        "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj",
+        "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Joasper\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
-                "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+              "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
               }
             }
           }
@@ -74,20 +73,20 @@
         }
       }
     },
-    "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+    "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
         "projectName": "MikroClean.Domain",
-        "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
-        "packagesPath": "C:\\Users\\Joasper\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\obj\\",
+        "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj",
+        "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Joasper\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -96,7 +95,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -140,20 +138,20 @@
         }
       }
     },
-    "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
+    "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
         "projectName": "MikroClean.Infrastructure",
-        "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Joasper\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Joasper\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -162,15 +160,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
-                "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+              "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
               }
             }
           }
@@ -226,20 +223,20 @@
         }
       }
     },
-    "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
+    "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
+        "projectUniqueName": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
         "projectName": "MikroClean.InversionOfControl",
-        "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
-        "packagesPath": "C:\\Users\\Joasper\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\obj\\",
+        "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\MikroClean.InversionOfControl.csproj",
+        "packagesPath": "C:\\Users\\Phillips-DC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.InversionOfControl\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Joasper\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Phillips-DC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -248,21 +245,20 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
-                "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj"
+              "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj": {
+                "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroClean.Application.csproj"
               },
-              "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
-                "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
+              "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj": {
+                "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroClean.Domain.csproj"
               },
-              "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj"
+              "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\Phillips-DC\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj"
               }
             }
           }
