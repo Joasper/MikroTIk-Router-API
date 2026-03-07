@@ -7,7 +7,7 @@ using MikroClean.Domain.Entities.Base;
 
 namespace MikroClean.Domain.Entities
 {
-    internal class Licenses:BaseEntity  
+    public class Licenses:BaseEntity  
     {
         public string LicenseKey { get; set; }
         public DateTime ExpirationDate { get; set; }

@@ -7,7 +7,7 @@ using MikroClean.Domain.Entities.Base;
 
 namespace MikroClean.Domain.Entities
 {
-    internal class Users: BaseEntity
+    public class Users: BaseEntity
     {
         public string UserName { get; set; }
         public string Email { get; set; }
