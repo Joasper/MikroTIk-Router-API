@@ -5,10 +5,25 @@ using MikroClean.InversionOfControl;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add dependency injection for services and repositories
-builder.Services.AddDependencies();
+builder.Services.AddDependencies(builder.Configuration);
 
 // Add DbContext 
 builder.Services.AddMikroCleanContext(builder.Configuration);
+
+// Add JWT Authentication
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "http://localhost:4201")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
 
 // Automatically apply pending migrations to the database on application startup
 builder.Services.AutomaticMigrate();
@@ -31,6 +46,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAngularApp");
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

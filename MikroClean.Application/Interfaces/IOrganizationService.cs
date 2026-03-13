@@ -7,7 +7,9 @@ namespace MikroClean.Application.Interfaces
     {
         Task<ApiResponse<OrganizationDTO>> GetOrganizationByIdAsync(int id);
         Task<ApiResponse<IEnumerable<OrganizationDTO>>> GetAllOrganizationsAsync();
+        Task<ApiResponse<PagedResult<OrganizationDTO>>> GetOrganizationsPagedAsync(PaginationParams paginationParams);
         Task<ApiResponse<OrganizationDTO>> CreateOrganizationAsync(CreateOrganizationDTO createOrganizationDTO);
+        Task<ApiResponse<OrganizationWithAdminDTO>> CreateOrganizationWithAdminAsync(CreateOrganizationWithAdminDTO createDto);
         Task<ApiResponse<OrganizationDTO>> UpdateOrganizationAsync(int id, UpdateOrganizationDTO updateOrganizationDTO);
         Task<ApiResponse<bool>> DeleteOrganizationAsync(int id);
     }

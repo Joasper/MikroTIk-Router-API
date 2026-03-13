@@ -1,0 +1,454 @@
+# ?? Guía de Uso - Sistema MikroTik
+
+## ?? Ejemplos Prácticos
+
+### 1. Probar Conexión a un Router
+
+```http
+GET /api/mikrotik/routers/1/test-connection
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Conexión exitosa",
+  "data": {
+    "routerId": 1,
+    "isConnected": true,
+    "lastConnected": "2024-01-15T10:30:00Z",
+    "failedAttempts": 0,
+    "latency": "00:00:00.234"
+  },
+  "timestamp": "2024-01-15T10:30:05Z"
+}
+```
+
+---
+
+### 2. Pre-calentar Conexiones de una Organización
+
+```http
+POST /api/mikrotik/organizations/1/warm-up
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Conexiones pre-calentadas: 5/5 exitosas",
+  "data": {
+    "1": true,
+    "2": true,
+    "3": true,
+    "4": true,
+    "5": true
+  }
+}
+```
+
+---
+
+### 3. Crear un Bridge
+
+```http
+POST /api/mikrotik/routers/1/interfaces/bridge
+Content-Type: application/json
+
+{
+  "name": "bridge-lan",
+  "adminMac": false,
+  "agingTime": 300,
+  "comment": "Bridge principal para LAN",
+  "disabled": false
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Bridge creado exitosamente",
+  "data": {
+    "id": "*1",
+    "name": "bridge-lan",
+    "macAddress": "AA:BB:CC:DD:EE:FF",
+    "running": true,
+    "disabled": false,
+    "comment": "Bridge principal para LAN"
+  }
+}
+```
+
+---
+
+### 4. Crear VLAN
+
+```http
+POST /api/mikrotik/routers/1/interfaces/vlan
+Content-Type: application/json
+
+{
+  "name": "vlan-office",
+  "vlanId": 100,
+  "interface": "bridge-lan",
+  "comment": "VLAN para oficinas",
+  "disabled": false
+}
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "VLAN creada exitosamente",
+  "data": {
+    "id": "*2",
+    "name": "vlan-office",
+    "vlanId": 100,
+    "interface": "bridge-lan",
+    "running": true,
+    "disabled": false
+  }
+}
+```
+
+---
+
+### 5. Agregar Dirección IP
+
+```http
+POST /api/mikrotik/routers/1/ip/address
+Content-Type: application/json
+
+{
+  "address": "192.168.100.1/24",
+  "interface": "bridge-lan",
+  "comment": "Gateway principal",
+  "disabled": false
+}
+```
+
+---
+
+### 6. Crear Regla de Firewall
+
+```http
+POST /api/mikrotik/routers/1/firewall/rules
+Content-Type: application/json
+
+{
+  "chain": "forward",
+  "action": "accept",
+  "srcAddress": "192.168.100.0/24",
+  "dstAddress": "10.0.0.0/8",
+  "protocol": "tcp",
+  "dstPort": "443,80",
+  "comment": "Permitir HTTP/HTTPS desde oficina",
+  "disabled": false
+}
+```
+
+---
+
+### 7. Obtener Todas las Interfaces
+
+```http
+GET /api/mikrotik/routers/1/interfaces
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Se encontraron 12 interfaces",
+  "data": [
+    {
+      "id": "*1",
+      "name": "ether1",
+      "type": "ether",
+      "macAddress": "AA:BB:CC:DD:EE:01",
+      "running": true,
+      "disabled": false,
+      "rxBytes": 1234567890,
+      "txBytes": 9876543210
+    },
+    {
+      "id": "*2",
+      "name": "bridge-lan",
+      "type": "bridge",
+      "macAddress": "AA:BB:CC:DD:EE:FF",
+      "running": true,
+      "disabled": false,
+      "rxBytes": 5555555,
+      "txBytes": 6666666
+    }
+  ]
+}
+```
+
+---
+
+### 8. Obtener Recursos del Sistema
+
+```http
+GET /api/mikrotik/routers/1/system/resources
+```
+
+**Response:**
+```json
+{
+  "status": "success",
+  "message": "Información del sistema obtenida exitosamente",
+  "data": {
+    "version": "7.12.1",
+    "boardName": "RB750Gr3",
+    "architecture": "arm",
+    "totalMemory": 268435456,
+    "freeMemory": 134217728,
+    "cpuLoad": 15.5,
+    "totalHddSpace": 16777216,
+    "freeHddSpace": 8388608,
+    "uptime": "7.12:30:45"
+  }
+}
+```
+
+---
+
+## ?? Manejo de Errores con Reintentos
+
+### Escenario: Router temporalmente no disponible
+
+```http
+POST /api/mikrotik/routers/1/interfaces/bridge
+```
+
+**Logs del servidor:**
+```
+[10:30:01] Warning: Reintentando operación MikroTik. Intento 1/3. Error: Connection timeout
+[10:30:03] Warning: Reintentando operación MikroTik. Intento 2/3. Error: Connection timeout
+[10:30:07] Info: Operación exitosa en router 1. Comando: /interface/bridge/add. Intentos: 3
+```
+
+**Response (después de 3 intentos):**
+```json
+{
+  "status": "success",
+  "message": "Bridge creado exitosamente",
+  "data": { "id": "*1", "name": "bridge-lan", ... }
+}
+```
+
+---
+
+### Escenario: Error no recuperable (credenciales incorrectas)
+
+**Response (sin reintentos):**
+```json
+{
+  "status": "error",
+  "message": "Error creando bridge: Authentication failed",
+  "errors": {
+    "errorType": "AuthenticationFailed"
+  }
+}
+```
+
+---
+
+## ?? Uso en Servicios C#
+
+### Inyección de Dependencia
+
+```csharp
+public class RouterManagementService
+{
+    private readonly IMikroTikService _mikroTikService;
+    private readonly IRouterRepository _routerRepository;
+
+    public RouterManagementService(
+        IMikroTikService mikroTikService,
+        IRouterRepository routerRepository)
+    {
+        _mikroTikService = mikroTikService;
+        _routerRepository = routerRepository;
+    }
+
+    public async Task<bool> SetupNewBranchAsync(int routerId, string branchName)
+    {
+        // 1. Crear bridge
+        var bridgeResult = await _mikroTikService.CreateBridgeAsync(
+            routerId,
+            new CreateBridgeRequest
+            {
+                Name = $"bridge-{branchName}",
+                Comment = $"Bridge para sucursal {branchName}"
+            }
+        );
+
+        if (bridgeResult.Status != ResponseStatus.Success)
+            return false;
+
+        // 2. Agregar IP
+        var ipResult = await _mikroTikService.CreateIpAddressAsync(
+            routerId,
+            new CreateIpAddressRequest
+            {
+                Address = "192.168.1.1/24",
+                Interface = bridgeResult.Data!.Name
+            }
+        );
+
+        return ipResult.Status == ResponseStatus.Success;
+    }
+}
+```
+
+---
+
+## ?? Configuración de Seguridad (Próximo Paso)
+
+### Agregar Autorización por Organización
+
+```csharp
+[Authorize]
+[HttpPost("routers/{routerId}/interfaces/bridge")]
+public async Task<IActionResult> CreateBridge(int routerId, [FromBody] CreateBridgeRequest request)
+{
+    // Verificar que el usuario tiene acceso al router
+    var userId = User.GetUserId();
+    var hasAccess = await _routerAccessValidator.ValidateAccessAsync(userId, routerId);
+    
+    if (!hasAccess)
+    {
+        return Forbid();
+    }
+
+    var response = await _mikroTikService.CreateBridgeAsync(routerId, request);
+    return HandleResponse(response);
+}
+```
+
+---
+
+## ?? Monitoreo de Conexiones
+
+### Background Service (Recomendado)
+
+```csharp
+public class RouterHealthCheckService : BackgroundService
+{
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ILogger<RouterHealthCheckService> _logger;
+
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (!stoppingToken.IsCancellationRequested)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var connectionManager = scope.ServiceProvider.GetRequiredService<IMikroTikConnectionManager>();
+            var routerRepository = scope.ServiceProvider.GetRequiredService<IRouterRepository>();
+
+            var allRouters = await routerRepository.GetAllAsync();
+            
+            foreach (var router in allRouters.Where(r => r.IsActive))
+            {
+                var status = await connectionManager.GetConnectionStatusAsync(router.Id);
+                
+                if (!status.IsConnected)
+                {
+                    _logger.LogWarning("Router {RouterId} desconectado", router.Id);
+                    // Crear notificación o alerta
+                }
+            }
+
+            await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
+        }
+    }
+}
+```
+
+---
+
+## ?? Testing
+
+### Unit Test Example
+
+```csharp
+[Fact]
+public async Task CreateBridge_WhenSuccessful_ReturnsSuccessResponse()
+{
+    // Arrange
+    var mockConnectionManager = new Mock<IMikroTikConnectionManager>();
+    var mockRouterRepo = new Mock<IRouterRepository>();
+    var service = new MikroTikService(mockConnectionManager.Object, mockRouterRepo.Object, Mock.Of<ILogger>());
+
+    var request = new CreateBridgeRequest { Name = "test-bridge" };
+    var expectedResult = MikroTikResult<BridgeResponse>.Success(new BridgeResponse { Name = "test-bridge" });
+
+    mockConnectionManager
+        .Setup(m => m.ExecuteOperationAsync(1, It.IsAny<CreateBridgeOperation>(), request, default))
+        .ReturnsAsync(expectedResult);
+
+    // Act
+    var result = await service.CreateBridgeAsync(1, request);
+
+    // Assert
+    Assert.Equal(ResponseStatus.Success, result.Status);
+    Assert.Equal("test-bridge", result.Data!.Name);
+}
+```
+
+---
+
+## ?? Mejores Prácticas
+
+### ? DO:
+- Siempre validar que el router existe y está activo antes de operaciones
+- Usar el retry policy para operaciones críticas
+- Registrar todas las operaciones en AuditLog
+- Validar permisos del usuario sobre el router
+- Cerrar conexiones al finalizar una sesión de usuario
+
+### ? DON'T:
+- No mantener conexiones abiertas indefinidamente
+- No ejecutar operaciones masivas sin rate limiting
+- No hardcodear credenciales
+- No ignorar los errores de tipo AuthenticationFailed
+- No hacer múltiples conexiones simultáneas al mismo router
+
+---
+
+## ?? Instalación de Dependencias
+
+```bash
+# Restaurar paquetes
+dotnet restore
+
+# Instalar tik4net manualmente si es necesario
+cd MikroClean.Infrastructure
+dotnet add package tik4net --version 3.7.0
+dotnet add package Polly --version 8.2.0
+dotnet add package Microsoft.Extensions.Caching.Memory --version 8.0.0
+```
+
+---
+
+## ?? Configuración appsettings.json
+
+```json
+{
+  "MikroTik": {
+    "ConnectionTimeout": 10,
+    "CommandTimeout": 30,
+    "MaxConnectionsPerOrganization": 20,
+    "RetryPolicy": {
+      "MaxRetryAttempts": 3,
+      "InitialDelaySeconds": 1,
+      "MaxDelaySeconds": 10,
+      "BackoffMultiplier": 2.0
+    }
+  }
+}
+```

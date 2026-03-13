@@ -12,7 +12,8 @@ namespace MikroClean.Application.Dtos.License
         public bool IsActive { get; set; }
         public int? MaxRouters { get; set; }
         public int? MaxUsers { get; set; }
-        public bool IsExpired => DateTime.UtcNow > EndDate;
+        public int? OrganizationId { get; set; }
+        public bool IsExpired => EndDate < DateTime.UtcNow;
         public int DaysRemaining => (EndDate - DateTime.UtcNow).Days;
     }
 }

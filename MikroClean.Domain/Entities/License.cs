@@ -14,9 +14,9 @@ namespace MikroClean.Domain.Entities
         public int? MaxUsers { get; set; }
 
         // Foreign Key
-        public int OrganizationId { get; set; }
+        public int? OrganizationId { get; set; }
 
         // Navigation property
-        public Organizations Organization { get; set; } = null!;
+        public Organizations? Organization { get; set; } = null!;
     }
 }

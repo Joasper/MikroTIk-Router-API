@@ -41,14 +41,13 @@ namespace MikroClean.Infrastructure.Configurations
                 .IsRequired(false);
             
             builder.Property(l => l.OrganizationId)
-                .IsRequired();
+                .IsRequired(false);
 
             // Indexes
             builder.HasIndex(l => l.Key)
                 .IsUnique();
             
-            builder.HasIndex(l => l.OrganizationId)
-                .IsUnique();
+            builder.HasIndex(l => l.OrganizationId);
             
             builder.HasIndex(l => new { l.IsActive, l.EndDate });
         }

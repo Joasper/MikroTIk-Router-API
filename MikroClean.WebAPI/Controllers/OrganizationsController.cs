@@ -30,6 +30,37 @@ namespace MikroClean.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Obtiene organizaciones con paginación, búsqueda y ordenamiento
+        /// </summary>
+        /// <param name="pageNumber">Número de página (default: 1)</param>
+        /// <param name="pageSize">Tamaño de página (default: 10, max: 100)</param>
+        /// <param name="sortBy">Campo para ordenar (name, email, createdAt)</param>
+        /// <param name="sortDescending">Orden descendente (default: false)</param>
+        /// <param name="searchTerm">Término de búsqueda (busca en nombre, email, teléfono)</param>
+        /// <returns>Resultado paginado de organizaciones</returns>
+        [HttpGet("paged")]
+        [ProducesResponseType(typeof(ApiResponse<PagedResult<OrganizationDTO>>), 200)]
+        public async Task<IActionResult> GetPaged(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? sortBy = null,
+            [FromQuery] bool sortDescending = false,
+            [FromQuery] string? searchTerm = null)
+        {
+            var paginationParams = new PaginationParams
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SortBy = sortBy,
+                SortDescending = sortDescending,
+                SearchTerm = searchTerm
+            };
+
+            var response = await _organizationService.GetOrganizationsPagedAsync(paginationParams);
+            return HandleResponse(response);
+        }
+
+        /// <summary>
         /// Obtiene una organización por su ID
         /// </summary>
         /// <param name="id">ID de la organización</param>
@@ -59,6 +90,33 @@ namespace MikroClean.WebAPI.Controllers
             var response = await _organizationService.CreateOrganizationAsync(createDto);
             
             // Si es exitoso, retornar 201 Created con Location header
+            if (response.Status == "success" && response.Data != null)
+            {
+                return CreatedAtAction(
+                    nameof(GetById), 
+                    new { id = response.Data.Id }, 
+                    response
+                );
+            }
+
+            return HandleResponse(response);
+        }
+
+        /// <summary>
+        /// Crea una nueva organización completa con usuario administrador y licencia trial
+        /// </summary>
+        /// <param name="createDto">Datos de la organización y administrador</param>
+        /// <returns>Organización creada</returns>
+        [HttpPost("with-admin")]
+        [ProducesResponseType(typeof(ApiResponse<OrganizationWithAdminDTO>), 201)]
+        [ProducesResponseType(typeof(ApiResponse<OrganizationWithAdminDTO>), 400)]
+        public async Task<IActionResult> CreateWithAdmin([FromBody] CreateOrganizationWithAdminDTO createDto)
+        {
+            if (!ModelState.IsValid)
+                return HandleValidationError();
+
+            var response = await _organizationService.CreateOrganizationWithAdminAsync(createDto);
+            
             if (response.Status == "success" && response.Data != null)
             {
                 return CreatedAtAction(
