@@ -6,11 +6,21 @@ namespace MikroClean.Domain.MikroTik
     public interface IMikroTikConnectionManager
     {
         /// <summary>
-        /// Ejecuta una operaci髇 en un router espec韋ico con retry policy
+        /// Ejecuta una operaci贸n en un router espec铆fico con retry policy
         /// </summary>
         Task<MikroTikResult<TResponse>> ExecuteOperationAsync<TRequest, TResponse>(
             int routerId,
             IMikroTikOperation<TRequest, TResponse> operation,
+            TRequest request,
+            CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Ejecuta una mutaci贸n (add/set/remove) en un router.
+        /// MikroTik retorna un string ID o null - nunca un ITikSentence.
+        /// </summary>
+        Task<MikroTikResult<TResponse>> ExecuteMutationAsync<TRequest, TResponse>(
+            int routerId,
+            IMikroTikMutation<TRequest, TResponse> operation,
             TRequest request,
             CancellationToken cancellationToken = default);
 
@@ -23,7 +33,7 @@ namespace MikroClean.Domain.MikroTik
             CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Obtiene el estado de conexi髇 actual de un router
+        /// Obtiene el estado de conexi贸n actual de un router
         /// </summary>
         Task<RouterConnectionStatus> GetConnectionStatusAsync(int routerId);
 
@@ -38,23 +48,23 @@ namespace MikroClean.Domain.MikroTik
         Task<MikroTikResult<bool>> RebootRouterAsync(int routerId);
 
         /// <summary>
-        /// Cierra todas las conexiones de una organizaci髇 (ej: al desconectar usuario)
+        /// Cierra todas las conexiones de una organizaci贸n (ej: al desconectar usuario)
         /// </summary>
         Task DisconnectOrganizationRoutersAsync(int organizationId);
 
         /// <summary>
-        /// Cierra conexi髇 espec韋ica de un router
+        /// Cierra conexi贸n espec铆fica de un router
         /// </summary>
         Task DisconnectRouterAsync(int routerId);
 
         /// <summary>
-        /// Pre-calienta las conexiones de los routers de una organizaci髇
+        /// Pre-calienta las conexiones de los routers de una organizaci贸n
         /// </summary>
         Task WarmUpConnectionsAsync(int organizationId);
     }
 
     /// <summary>
-    /// Cliente de conexi髇 individual a un router MikroTik
+    /// Cliente de conexi贸n individual a un router MikroTik
     /// </summary>
     public interface IMikroTikClient : IDisposable
     {

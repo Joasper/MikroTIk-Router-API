@@ -220,4 +220,132 @@ namespace MikroClean.Domain.MikroTik.Operations
 
 
     }
+
+    // ============= PPP =============
+
+    public class CreatePPPoEProfile
+    {
+        public string Name { get; set; } = string.Empty;
+        public string LocalAddress { get; set; } = string.Empty;
+        public string RemoteAddress { get; set; } = string.Empty;
+        public string DnsServers { get; set; } = string.Empty;
+        public string RateLimit { get; set; } = string.Empty;
+        public string OnlyOne { get; set; } = "default";
+        public string Comment { get; set; } = string.Empty;
+
+    }
+
+    public class UpdatePPPoEProfile
+    {
+        public string Id { get; set; }
+        public string? Name { get; set; }
+        public string? LocalAddress { get; set; }
+        public string? RemoteAddress { get; set; }
+        public string? DnsServers { get; set; }
+        public string? RateLimit { get; set; }
+        public string? OnlyOne { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    public class DeletePPPoEProfile
+    {
+        public string Id { get; set; }
+    }
+
+
+    public class PPPoEProfileResponse
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string LocalAddress { get; set; } = string.Empty;
+        public string RemoteAddress { get; set; } = string.Empty;
+        public string DnsServers { get; set; } = string.Empty;
+        public string RateLimit { get; set; } = string.Empty;
+        public string OnlyOne { get; set; } = "default";
+        public string Comment { get; set; } = string.Empty;
+
+    }
+
+
+    public class CreatePPPoESecretRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string Service { get; set; } = "pppoe";
+        public string Profile { get; set; } = string.Empty;
+        public string Comment { get; set; } = string.Empty;
+    }
+
+
+    public class PPPoESecretResponse
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Service { get; set; } = string.Empty;
+        public string Profile { get; set; } = string.Empty;
+        public bool Disabled { get; set; }
+        public string Comment { get; set; } = string.Empty;
+    }
+
+    public class UpdatePPPoESecretRequest
+    {
+        public string Id { get; set; }
+        public string? Name { get; set; }
+        public string? Password { get; set; }
+        public string? Service { get; set; }
+        public string? Profile { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    public class DeletePPPoESecretRequest
+    {
+        public string Id { get; set; }
+    }
+
+
+    public class CreatePPPoEServerRequest
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Interface { get; set; } = string.Empty;
+        public string Profile { get; set; } = "default";
+        public string MaxMTU { get; set; } = "1480";
+        public string MaxMRU { get; set; } = "1480";
+        public string KeepAliveTimeOut { get; set; } = "10";
+        public string OneSesionPerHost { get; set; } = "yes";
+        public string Comment { get; set; } = string.Empty;
+    }
+
+    public class PPPoEServerResponse
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Interface { get; set; } = string.Empty;
+        public string Profile { get; set; } = "default";
+        public string MaxMTU { get; set; } = "1480";
+        public string MaxMRU { get; set; } = "1480";
+        public string KeepAliveTimeOut { get; set; } = "10";
+        public string OneSesionPerHost { get; set; } = "yes";
+        public bool Disabled { get; set; }
+        public string Comment { get; set; } = string.Empty;
+
+    }
+
+    public class UpdatePPPoEServerRequest
+    {
+        public string Id { get; set; }
+        public string? Name { get; set; }
+        public string? Interface { get; set; }
+        public string? Profile { get; set; }
+        public string? MaxMTU { get; set; }
+        public string? MaxMRU { get; set; }
+        public string? KeepAliveTimeOut { get; set; }
+        public string? OneSesionPerHost { get; set; }
+        public string? Comment { get; set; }
+    }
+
+    public class DeletePPPoEServerRequest
+    {
+        public string Id { get; set; }
+    }
+
 }

@@ -7,14 +7,6 @@
       "RelativeMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|solutionrelative:mikroclean.application\\mikrotik\\operations\\standardoperations.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.application\\services\\mikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|solutionrelative:mikroclean.application\\services\\mikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4DD45EAC-C3B5-44BC-839E-15C62FC68850}|MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.infrastructure\\mikrotik\\mikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4DD45EAC-C3B5-44BC-839E-15C62FC68850}|MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj|solutionrelative:mikroclean.infrastructure\\mikrotik\\mikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.domain\\mikrotik\\operations\\operationmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\mikrotik\\operations\\operationmodels.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,12 +15,24 @@
       "RelativeMoniker": "D:0:0:{4DD45EAC-C3B5-44BC-839E-15C62FC68850}|MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj|solutionrelative:mikroclean.infrastructure\\mikrotik\\mikrotikclient.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{12262F60-57A9-49AF-B026-A6B1FCC682CB}|MikroClean.WebAPI\\MikroClean.WebAPI.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.webapi\\controllers\\mikrotikcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{12262F60-57A9-49AF-B026-A6B1FCC682CB}|MikroClean.WebAPI\\MikroClean.WebAPI.csproj|solutionrelative:mikroclean.webapi\\controllers\\mikrotikcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.application\\services\\mikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|solutionrelative:mikroclean.application\\services\\mikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.application\\interfaces\\imikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9F3D20A9-41EA-4AE3-8452-85859C6937C6}|MikroClean.Application\\MikroClean.Application.csproj|solutionrelative:mikroclean.application\\interfaces\\imikrotikservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{12262F60-57A9-49AF-B026-A6B1FCC682CB}|MikroClean.WebAPI\\MikroClean.WebAPI.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.webapi\\controllers\\mikrotikcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{12262F60-57A9-49AF-B026-A6B1FCC682CB}|MikroClean.WebAPI\\MikroClean.WebAPI.csproj|solutionrelative:mikroclean.webapi\\controllers\\mikrotikcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{4DD45EAC-C3B5-44BC-839E-15C62FC68850}|MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.infrastructure\\mikrotik\\mikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4DD45EAC-C3B5-44BC-839E-15C62FC68850}|MikroClean.Infrastructure\\MikroClean.Infrastructure.csproj|solutionrelative:mikroclean.infrastructure\\mikrotik\\mikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.domain\\mikrotik\\imikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|solutionrelative:mikroclean.domain\\mikrotik\\imikrotikconnectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{5F91CA5C-9054-46D6-88EF-AECE2FC886AE}|MikroClean.Domain\\MikroClean.Domain.csproj|c:\\users\\joasper\\documents\\github\\mikrotik-router-api\\mikroclean.domain\\mikrotik\\imikrotikoperation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -72,7 +76,7 @@
               "RelativeDocumentMoniker": "MikroClean.Application\\MikroTik\\Operations\\StandardOperations.cs",
               "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\MikroTik\\Operations\\StandardOperations.cs",
               "RelativeToolTip": "MikroClean.Application\\MikroTik\\Operations\\StandardOperations.cs",
-              "ViewState": "AgIAAE0BAAAAAAAAAAA8wGIBAAAQAAAAAAAAAA==",
+              "ViewState": "AgIAAEcDAAAAAAAAAAAYwBUDAABMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-13T14:54:08.745Z",
               "IsPinned": true,
@@ -80,13 +84,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "OperationModels.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroTik\\Operations\\OperationModels.cs",
               "RelativeDocumentMoniker": "MikroClean.Domain\\MikroTik\\Operations\\OperationModels.cs",
               "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroTik\\Operations\\OperationModels.cs",
               "RelativeToolTip": "MikroClean.Domain\\MikroTik\\Operations\\OperationModels.cs",
-              "ViewState": "AgIAAMQAAAAAAAAAAAAjwM4AAAAFAAAAAAAAAA==",
+              "ViewState": "AgIAADABAAAAAAAAAAAUwDsBAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-13T14:39:15.266Z",
               "IsPinned": true,
@@ -100,7 +104,7 @@
               "RelativeDocumentMoniker": "MikroClean.Application\\Interfaces\\IMikroTikService.cs",
               "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Interfaces\\IMikroTikService.cs",
               "RelativeToolTip": "MikroClean.Application\\Interfaces\\IMikroTikService.cs",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAAwEwAAABlAAAAAAAAAA==",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAqwGMAAAB2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-13T15:15:06.752Z",
               "IsPinned": true,
@@ -108,13 +112,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "MikroTikService.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Services\\MikroTikService.cs",
               "RelativeDocumentMoniker": "MikroClean.Application\\Services\\MikroTikService.cs",
               "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Services\\MikroTikService.cs",
               "RelativeToolTip": "MikroClean.Application\\Services\\MikroTikService.cs",
-              "ViewState": "AgIAAGMBAAAAAAAAAAAiwGcBAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAAEQBAAAAAAAAAAAawEkBAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-13T15:15:04.209Z",
               "IsPinned": true,
@@ -122,26 +126,27 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "MikroTikConnectionManager.cs",
-              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
-              "RelativeDocumentMoniker": "MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
-              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
-              "RelativeToolTip": "MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAADwv1cAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "MikroTikController.cs",
+              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
+              "RelativeDocumentMoniker": "MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
+              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
+              "RelativeToolTip": "MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
+              "ViewState": "AgIAAOoAAAAAAAAAAAAawO8AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-07T11:59:36.138Z",
+              "WhenOpened": "2026-03-13T15:24:40.756Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "MikroTikClient.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikClient.cs",
               "RelativeDocumentMoniker": "MikroClean.Infrastructure\\MikroTik\\MikroTikClient.cs",
               "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikClient.cs",
               "RelativeToolTip": "MikroClean.Infrastructure\\MikroTik\\MikroTikClient.cs",
-              "ViewState": "AgIAAGwAAAAAAAAAAAAawHgAAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAawMsAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-07T11:59:24.148Z",
               "EditorCaption": ""
@@ -149,18 +154,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 6,
-              "Title": "MikroTikController.cs",
-              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
-              "RelativeDocumentMoniker": "MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
-              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
-              "RelativeToolTip": "MikroClean.WebAPI\\Controllers\\MikroTikController.cs",
-              "ViewState": "AgIAAKwAAAAAAAAAAAAowJgAAAAlAAAAAAAAAA==",
+              "Title": "MikroTikConnectionManager.cs",
+              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
+              "RelativeDocumentMoniker": "MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
+              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
+              "RelativeToolTip": "MikroClean.Infrastructure\\MikroTik\\MikroTikConnectionManager.cs",
+              "ViewState": "AgIAAKcAAAAAAAAAAAAUwLEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-13T15:24:40.756Z"
+              "WhenOpened": "2026-03-07T11:59:36.138Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "IMikroTikConnectionManager.cs",
+              "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroTik\\IMikroTikConnectionManager.cs",
+              "RelativeDocumentMoniker": "MikroClean.Domain\\MikroTik\\IMikroTikConnectionManager.cs",
+              "ToolTip": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroTik\\IMikroTikConnectionManager.cs",
+              "RelativeToolTip": "MikroClean.Domain\\MikroTik\\IMikroTikConnectionManager.cs",
+              "ViewState": "AgIAABAAAAAAAAAAAAApwBQAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-14T02:20:09.431Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "IMikroTikOperation.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Domain\\MikroTik\\IMikroTikOperation.cs",
               "RelativeDocumentMoniker": "MikroClean.Domain\\MikroTik\\IMikroTikOperation.cs",
@@ -172,7 +191,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "LicenseService.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Services\\LicenseService.cs",
               "RelativeDocumentMoniker": "MikroClean.Application\\Services\\LicenseService.cs",
@@ -184,7 +203,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "RouterService.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Services\\RouterService.cs",
               "RelativeDocumentMoniker": "MikroClean.Application\\Services\\RouterService.cs",
@@ -196,7 +215,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "RoutersController.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.WebAPI\\Controllers\\RoutersController.cs",
               "RelativeDocumentMoniker": "MikroClean.WebAPI\\Controllers\\RoutersController.cs",
@@ -208,7 +227,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 11,
               "Title": "IRouterService.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Interfaces\\IRouterService.cs",
               "RelativeDocumentMoniker": "MikroClean.Application\\Interfaces\\IRouterService.cs",
@@ -220,7 +239,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "RouterIpPoolDTO.cs",
               "DocumentMoniker": "C:\\Users\\Joasper\\Documents\\GitHub\\MikroTIk-Router-API\\MikroClean.Application\\Dtos\\Router\\RouterIpPoolDTO.cs",
               "RelativeDocumentMoniker": "MikroClean.Application\\Dtos\\Router\\RouterIpPoolDTO.cs",

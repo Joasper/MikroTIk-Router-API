@@ -1,4 +1,4 @@
-﻿using MikroClean.Domain.MikroTik;
+using MikroClean.Domain.MikroTik;
 using MikroClean.Domain.MikroTik.Operations;
 
 namespace MikroClean.Application.MikroTik.Operations
@@ -304,34 +304,34 @@ namespace MikroClean.Application.MikroTik.Operations
                 return pools;
             }
 
-            public class GetIpPoolByIdOperation : IMikroTikQuery<IpPoolResponse?>
+            public class GetIpPoolByIdOperation : IMikroTikOperation<string, IpPoolResponse?>
             {
-                private readonly string _id;
+                public string Command => "/ip/pool/print";
 
-                public GetIpPoolByIdOperation(string id)
+                public Dictionary<string, string> BuildParameters(string id)
                 {
-                    _id = id;
+                    return new Dictionary<string, string>
+                    {
+                        ["?.id"] = id
+                    };
                 }
 
-                public string Command => $"/ip/pool/print ?.id={_id}";
-
-                public IpPoolResponse? ParseResponse(IEnumerable<ITikSentence> responses)
+                public IpPoolResponse? ParseResponse(ITikSentence response)
                 {
-                    var sentence = responses.FirstOrDefault();
-                    if (sentence == null) return null;
+                    if (response == null) return null;
 
                     return new IpPoolResponse
                     {
-                        Id = sentence.GetResponseField(".id"),
-                        Name = sentence.GetResponseField("name"),
-                        Ranges = sentence.GetResponseField("ranges"),
-                        NextPool = sentence.GetOptionalField("next-pool"),
-                        Comment = sentence.GetOptionalField("comment")
+                        Id = response.GetResponseField(".id"),
+                        Name = response.GetResponseField("name"),
+                        Ranges = response.GetResponseField("ranges"),
+                        NextPool = response.GetOptionalField("next-pool"),
+                        Comment = response.GetOptionalField("comment")
                     };
                 }
             }
 
-            public class CreateIpPoolOperation : IMikroTikOperation<CreateIpPoolRequest, string>
+            public class CreateIpPoolOperation : IMikroTikMutation<CreateIpPoolRequest, IpPoolResponse>
             {
                 public string Command => "/ip/pool/add";
                 public Dictionary<string, string> BuildParameters(CreateIpPoolRequest request)
@@ -353,13 +353,15 @@ namespace MikroClean.Application.MikroTik.Operations
                     }
                     return parameters;
                 }
-                public string ParseResponse(ITikSentence response)
+                
+                // ParseResponse recibe el ID directamente ("*9")
+                public IpPoolResponse ParseResponse(string? rawResponse)
                 {
-                    return response.ToString();
+                    return new IpPoolResponse { Id = rawResponse ?? string.Empty };
                 }
             }
 
-            public class UpdateIpPoolOperation : IMikroTikOperation<UpdateIpPoolRequest, IpPoolResponse>
+            public class UpdateIpPoolOperation : IMikroTikMutation<UpdateIpPoolRequest, IpPoolResponse>
             {
                 public string Command => "/ip/pool/set";
 
@@ -367,7 +369,7 @@ namespace MikroClean.Application.MikroTik.Operations
                 {
                     var parameters = new Dictionary<string, string>
                     {
-                        [".id"] = request.Id
+                        { "numbers", request.Id.ToLower().Trim() }
                     };
 
                     if (!string.IsNullOrEmpty(request.Name))
@@ -381,14 +383,14 @@ namespace MikroClean.Application.MikroTik.Operations
                         parameters["ranges"] = request.Ranges;
                     }
 
-                    if (request.NextPool != null)
+                    if (!string.IsNullOrWhiteSpace(request.NextPool))
                     {
-                        parameters["next-pool"] = request.Ranges;
+                        parameters["next-pool"] = request.NextPool;
                     }
 
                     if (!string.IsNullOrEmpty(request.Comment))
                     {
-                        parameters["comment"] = request.Ranges;
+                        parameters["comment"] = request.Comment;
                     }
 
 
@@ -396,21 +398,15 @@ namespace MikroClean.Application.MikroTik.Operations
 
                 }
 
-                public IpPoolResponse ParseResponse(ITikSentence response)
+                // set devuelve vacio, retornamos un objeto vacio, el servicio hara GetById
+                public IpPoolResponse ParseResponse(string? rawResponse)
                 {
-                    return new IpPoolResponse
-                    {
-                        Id = response.GetResponseField(".id"),
-                        Name = response.GetResponseField("name"),
-                        Ranges = response.GetResponseField("ranges"),
-                        NextPool = response.GetOptionalField("next-pool"),
-                        Comment = response.GetOptionalField("comment")
-                    };
+                    return new IpPoolResponse();
                 }
 
             }
 
-            public class DeleteIpPoolOperation : IMikroTikOperation<DeleteIpPoolRequest, IpPoolResponse>
+            public class DeleteIpPoolOperation : IMikroTikMutation<DeleteIpPoolRequest, IpPoolResponse>
             {
                 public string Command => "/ip/pool/remove";
 
@@ -422,14 +418,422 @@ namespace MikroClean.Application.MikroTik.Operations
                     };
                 }
 
-                public IpPoolResponse ParseResponse(ITikSentence response)
+                // remove devuelve vacio
+                public IpPoolResponse ParseResponse(string? rawResponse)
                 {
-                    return new IpPoolResponse
+                    return new IpPoolResponse();
+                }
+            }
+
+
+            public class CreatePPPoEProfileOperation : IMikroTikMutation<CreatePPPoEProfile, PPPoEProfileResponse>
+            {
+                public string Command => "/ppp/profile/add";
+                public Dictionary<string, string> BuildParameters(CreatePPPoEProfile request)
+                {
+                    var parameters = new Dictionary<string, string>
                     {
-                        Id = response.GetResponseField(".id") ?? string.Empty
+                        ["name"] = request.Name,
+                        ["local-address"] = request.LocalAddress,
+                        ["remote-address"] = request.RemoteAddress,
+                        ["dns-server"] = request.DnsServers,
+                        ["rate-limit"] = request.RateLimit,
+                        ["only-one"] = request.OnlyOne,
+                        //["disabled"] = request.Disabled ? "yes" : "no"
+                    };
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoEProfileResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEProfileResponse { Id = rawResponse ?? string.Empty };
+                }
+            }
+
+            public class GetPppProfileByIdOperation : IMikroTikOperation<string, PPPoEProfileResponse?>
+            {
+                public string Command => "/ppp/profile/print";
+                public Dictionary<string, string> BuildParameters(string id)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        ["?.id"] = id
+                    };
+                }
+                public PPPoEProfileResponse? ParseResponse(ITikSentence response)
+                {
+                    if (response == null) return null;
+                    return new PPPoEProfileResponse
+                    {
+                        Id = response.GetResponseField(".id"),
+                        Name = response.GetResponseField("name"),
+                        LocalAddress = response.GetResponseField("local-address"),
+                        RemoteAddress = response.GetResponseField("remote-address"),
+                        DnsServers = response.GetResponseField("dns-server"),
+                        RateLimit = response.GetResponseField("rate-limit"),
+                        OnlyOne = response.GetResponseField("only-one"),
+                        Comment = response.GetOptionalField("comment")
                     };
                 }
             }
+
+            public class GetAllPppProfilesQuery : IMikroTikQuery<List<PPPoEProfileResponse>>
+            {
+                public string Command => "/ppp/profile/print";
+                public List<PPPoEProfileResponse> ParseResponse(IEnumerable<ITikSentence> responses)
+                {
+                    var profiles = new List<PPPoEProfileResponse>();
+                    foreach (var sentence in responses)
+                    {
+                        profiles.Add(new PPPoEProfileResponse
+                        {
+                            Id = sentence.GetResponseField(".id"),
+                            Name = sentence.GetResponseField("name"),
+                            LocalAddress = sentence.GetOptionalField("local-address"),
+                            RemoteAddress = sentence.GetOptionalField("remote-address"),
+                            DnsServers = sentence.GetOptionalField("dns-server"),
+                            RateLimit = sentence.GetOptionalField("rate-limit"),
+                            OnlyOne = sentence.GetOptionalField("only-one"),
+                            Comment = sentence.GetOptionalField("comment")
+                        });
+                    }
+                    return profiles;
+                }
+            }
+
+            public class DeletePppProfileOperation : IMikroTikMutation<DeletePPPoEProfile, PPPoEProfileResponse>
+            {
+                public string Command => "/ppp/profile/remove";
+                public Dictionary<string, string> BuildParameters(DeletePPPoEProfile parameters)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        [".id"] = parameters.Id.Trim().ToLower()
+                    };
+                }
+                public PPPoEProfileResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEProfileResponse();
+                }
+            }
+
+            public class UpdatePppProfileOperation : IMikroTikMutation<UpdatePPPoEProfile, PPPoEProfileResponse>
+            {
+                public string Command => "/ppp/profile/set";
+                public Dictionary<string, string> BuildParameters(UpdatePPPoEProfile request)
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { "numbers", request.Id.ToLower().Trim() }
+                    };
+                    if (!string.IsNullOrEmpty(request.Name))
+                    {
+                        parameters["name"] = request.Name;
+                    }
+                    if (!string.IsNullOrEmpty(request.LocalAddress))
+                    {
+                        parameters["local-address"] = request.LocalAddress;
+                    }
+                    if (!string.IsNullOrEmpty(request.RemoteAddress))
+                    {
+                        parameters["remote-address"] = request.RemoteAddress;
+                    }
+                    if (!string.IsNullOrEmpty(request.DnsServers))
+                    {
+                        parameters["dns-server"] = request.DnsServers;
+                    }
+                    if (!string.IsNullOrEmpty(request.RateLimit))
+                    {
+                        parameters["rate-limit"] = request.RateLimit;
+                    }
+                    if (!string.IsNullOrEmpty(request.OnlyOne))
+                    {
+                        parameters["only-one"] = request.OnlyOne;
+                    }
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoEProfileResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEProfileResponse();
+                }
+            }
+
+
+            public class CreatePPPoESecretOperation : IMikroTikMutation<CreatePPPoESecretRequest, PPPoESecretResponse>
+            {
+                public string Command => "/ppp/secret/add";
+                public Dictionary<string, string> BuildParameters(CreatePPPoESecretRequest request)
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        ["name"] = request.Name,
+                        ["password"] = request.Password,
+                        ["profile"] = request.Profile,
+                        ["service"] = request.Service,
+                    };
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoESecretResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoESecretResponse { Id = rawResponse ?? string.Empty };
+                }
+            }
+
+            public class GetPppSecretByIdOperation : IMikroTikOperation<string, PPPoESecretResponse?>
+            {
+                public string Command => "/ppp/secret/print";
+                public Dictionary<string, string> BuildParameters(string id)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        ["?.id"] = id
+                    };
+                }
+                public PPPoESecretResponse? ParseResponse(ITikSentence response)
+                {
+                    if (response == null) return null;
+                    return new PPPoESecretResponse
+                    {
+                        Id = response.GetResponseField(".id"),
+                        Name = response.GetResponseField("name"),
+                        Profile = response.GetResponseField("profile"),
+                        Service = response.GetResponseField("service"),
+                        Comment = response.GetOptionalField("comment")
+                    };
+                }
+            }
+
+            public class GetAllPppSecretsQuery : IMikroTikQuery<List<PPPoESecretResponse>>
+            {
+                public string Command => "/ppp/secret/print";
+                public List<PPPoESecretResponse> ParseResponse(IEnumerable<ITikSentence> responses)
+                {
+                    var secrets = new List<PPPoESecretResponse>();
+                    foreach (var sentence in responses)
+                    {
+                        secrets.Add(new PPPoESecretResponse
+                        {
+                            Id = sentence.GetResponseField(".id"),
+                            Name = sentence.GetResponseField("name"),
+                            Profile = sentence.GetResponseField("profile"),
+                            Service = sentence.GetResponseField("service"),
+                            Comment = sentence.GetOptionalField("comment")
+                        });
+                    }
+                    return secrets;
+                }
+            }
+
+            public class DeletePppSecretOperation : IMikroTikMutation<DeletePPPoESecretRequest, PPPoESecretResponse>
+            {
+                public string Command => "/ppp/secret/remove";
+                public Dictionary<string, string> BuildParameters(DeletePPPoESecretRequest parameters)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        [".id"] = parameters.Id.Trim().ToLower()
+                    };
+                }
+                public PPPoESecretResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoESecretResponse();
+                }
+            }
+
+            public class UpdatePppSecretOperation : IMikroTikMutation<UpdatePPPoESecretRequest, PPPoESecretResponse>
+            {
+                public string Command => "/ppp/secret/set";
+                public Dictionary<string, string> BuildParameters(UpdatePPPoESecretRequest request)
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { "numbers", request.Id.ToLower().Trim() }
+                    };
+                    if (!string.IsNullOrEmpty(request.Name))
+                    {
+                        parameters["name"] = request.Name;
+                    }
+                    if (!string.IsNullOrEmpty(request.Password))
+                    {
+                        parameters["password"] = request.Password;
+                    }
+                    if (!string.IsNullOrEmpty(request.Profile))
+                    {
+                        parameters["profile"] = request.Profile;
+                    }
+                    if (!string.IsNullOrEmpty(request.Service))
+                    {
+                        parameters["service"] = request.Service;
+                    }
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoESecretResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoESecretResponse();
+                }
+            }
+
+
+            public class CreatePPPoEServerOperation : IMikroTikMutation<CreatePPPoEServerRequest, PPPoEServerResponse>
+            {
+                public string Command => "/interface/pppoe-server/server/add";
+                public Dictionary<string, string> BuildParameters(CreatePPPoEServerRequest request)
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        ["service-name"] = request.Name,
+                        ["interface"] = request.Interface,
+                        ["default-profile"] = request.Profile,
+                        ["max-mtu"] = request.MaxMTU,
+                        ["max-mru"] = request.MaxMRU,
+                        ["keepalive-timeout"] = request.KeepAliveTimeOut,
+                        ["one-session-per-host"] = request.OneSesionPerHost,
+                    };
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoEServerResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEServerResponse { Id = rawResponse ?? string.Empty };
+                }
+            }
+
+            public class GetPppServerByIdOperation : IMikroTikOperation<string, PPPoEServerResponse?>
+            {
+                public string Command => "/interface/pppoe-server/server/print";
+                public Dictionary<string, string> BuildParameters(string id)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        ["?.id"] = id
+                    };
+                }
+                public PPPoEServerResponse? ParseResponse(ITikSentence response)
+                {
+                    if (response == null) return null;
+                    return new PPPoEServerResponse
+                    {
+                        Id = response.GetResponseField(".id"),
+                        Name = response.GetResponseField("service-name"),
+                        Interface = response.GetResponseField("interface"),
+                        Profile = response.GetResponseField("default-profile"),
+                        MaxMTU = response.GetResponseField("max-mtu"),
+                        MaxMRU = response.GetResponseField("max-mru"),
+                        KeepAliveTimeOut = response.GetResponseField("keepalive-timeout"),
+                        OneSesionPerHost = response.GetResponseField("one-session-per-host"),
+                        Comment = response.GetOptionalField("comment")
+                    };
+                }
+            }
+
+            public class GetAllPppServersQuery : IMikroTikQuery<List<PPPoEServerResponse>>
+            {
+                public string Command => "/interface/pppoe-server/server/print";
+                public List<PPPoEServerResponse> ParseResponse(IEnumerable<ITikSentence> responses)
+                {
+                    var servers = new List<PPPoEServerResponse>();
+                    foreach (var sentence in responses)
+                    {
+                        servers.Add(new PPPoEServerResponse
+                        {
+                            Id = sentence.GetResponseField(".id"),
+                            Name = sentence.GetResponseField("service-name"),
+                            Interface = sentence.GetResponseField("interface"),
+                            Profile = sentence.GetResponseField("default-profile"),
+                            MaxMTU = sentence.GetResponseField("max-mtu"),
+                            MaxMRU = sentence.GetResponseField("max-mru"),
+                            KeepAliveTimeOut = sentence.GetResponseField("keepalive-timeout"),
+                            OneSesionPerHost = sentence.GetResponseField("one-session-per-host"),
+                            Comment = sentence.GetOptionalField("comment")
+                        });
+                    }
+                    return servers;
+                }
+            }
+
+            public class DeletePppServerOperation : IMikroTikMutation<DeletePPPoEServerRequest, PPPoEServerResponse>
+            {
+                public string Command => "/interface/pppoe-server/server/remove";
+                public Dictionary<string, string> BuildParameters(DeletePPPoEServerRequest parameters)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        [".id"] = parameters.Id.Trim().ToLower()
+                    };
+                }
+                public PPPoEServerResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEServerResponse();
+                }
+            }
+
+            public class UpdatePppServerOperation : IMikroTikMutation<UpdatePPPoEServerRequest, PPPoEServerResponse>
+            {
+                public string Command => "/interface/pppoe-server/server/set";
+                public Dictionary<string, string> BuildParameters(UpdatePPPoEServerRequest request)
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { "numbers", request.Id.ToLower().Trim() }
+                    };
+                    if (!string.IsNullOrEmpty(request.Name))
+                    {
+                        parameters["service-name"] = request.Name;
+                    }
+                    if (!string.IsNullOrEmpty(request.Interface))
+                    {
+                        parameters["interface"] = request.Interface;
+                    }
+                    if (!string.IsNullOrEmpty(request.Profile))
+                    {
+                        parameters["default-profile"] = request.Profile;
+                    }
+                    if (!string.IsNullOrEmpty(request.MaxMTU))
+                    {
+                        parameters["max-mtu"] = request.MaxMTU;
+                    }
+                    if (!string.IsNullOrEmpty(request.MaxMRU))
+                    {
+                        parameters["max-mru"] = request.MaxMRU;
+                    }
+                    if (!string.IsNullOrEmpty(request.KeepAliveTimeOut))
+                    {
+                        parameters["keepalive-timeout"] = request.KeepAliveTimeOut;
+                    }
+                    if (!string.IsNullOrEmpty(request.OneSesionPerHost))
+                    {
+                        parameters["one-session-per-host"] = request.OneSesionPerHost;
+                    }
+                    if (!string.IsNullOrEmpty(request.Comment))
+                    {
+                        parameters["comment"] = request.Comment;
+                    }
+                    return parameters;
+                }
+                public PPPoEServerResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEServerResponse();
+                }
+            }
+
 
             //private static string GetRequiredField(ITikSentence sentence, string fieldName)
             //{

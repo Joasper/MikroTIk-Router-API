@@ -77,9 +77,32 @@ namespace MikroClean.Application.Interfaces
         Task<ApiResponse<IpPoolResponse>> DeleteIpPoolAsync(int routerId, DeleteIpPoolRequest request);
 
 
+        // ============= PPP =============
+
+        /// <summary>
+        /// Obtiene información de recursos del sistema
+        /// </summary>
+        Task<ApiResponse<List<PPPoEProfileResponse>>> GetAllPPPoEProfileAsync(int routerId);
+
+        Task<ApiResponse<PPPoEProfileResponse>> CreatePPPoEProfileAsync(int routerId, CreatePPPoEProfile createPPPoEProfile);
+        Task<ApiResponse<PPPoEProfileResponse>> UpdatePPPoEProfileAsync(int routerId, UpdatePPPoEProfile updatePPPoEProfile);
+
+        Task<ApiResponse<PPPoEProfileResponse>> DeletePPPoEProfileAsync(int routerId, DeletePPPoEProfile request);
+
+        Task<ApiResponse<List<PPPoESecretResponse>>> GetAllPPPoESecretAsync(int routerId);
+        Task<ApiResponse<PPPoESecretResponse>> CreatePPPoESecretAsync(int routerId, CreatePPPoESecretRequest createPPPoESecret);
+        Task<ApiResponse<PPPoESecretResponse>> UpdatePPPoESecretAsync(int routerId, UpdatePPPoESecretRequest updatePPPoESecret);
+        Task<ApiResponse<PPPoESecretResponse>> DeletePPPoESecretAsync(int routerId, DeletePPPoESecretRequest request);
+
+        Task<ApiResponse<List<PPPoEServerResponse>>> GetAllPPPoEServerAsync(int routerId);
+        Task<ApiResponse<PPPoEServerResponse>> CreatePPPoEServerAsync(int routerId, CreatePPPoEServerRequest createPPPoEServer);
+        Task<ApiResponse<PPPoEServerResponse>> UpdatePPPoEServerAsync(int routerId, UpdatePPPoEServerRequest updatePPPoEServer);
+        Task<ApiResponse<PPPoEServerResponse>> DeletePPPoEServerAsync(int routerId, DeletePPPoEServerRequest request);
+
+
 
         // ============= OPERACIONES EN BATCH =============
-        
+
         /// <summary>
         /// Ejecuta una operación en múltiples routers de una organización
         /// </summary>

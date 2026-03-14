@@ -160,6 +160,108 @@ namespace MikroClean.WebAPI.Controllers
             return HandleResponse(response);
         }
 
+        // ============= PPP =============
+
+
+        [HttpGet("routers/{routerId}/ppp/profiles")]
+        public async Task<IActionResult> GetAllPppProfiles(int routerId)
+        {
+            var response = await _mikroTikService.GetAllPPPoEProfileAsync(routerId);
+            return HandleResponse(response);
+        }
+
+
+
+        /// <summary>
+        /// </summary>
+        /// <param name="routerId"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// 
+
+        [HttpPost("routers/{routerId}/ppp/profile")]
+        public async Task<IActionResult> CreatePppProfileAsync(int routerId, CreatePPPoEProfile request)
+        {
+            var response = await _mikroTikService.CreatePPPoEProfileAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+
+        [HttpPut("routers/{routerId}/ppp/profile")]
+        public async Task<IActionResult> UpdatePppProfileAsync(int routerId, UpdatePPPoEProfile request)
+        {
+            var response = await _mikroTikService.UpdatePPPoEProfileAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpDelete("routers/{routerId}/ppp/profile")]
+        public async Task<IActionResult> DeletePppProfileAsync(int routerId, DeletePPPoEProfile request)
+        {
+            var response = await _mikroTikService.DeletePPPoEProfileAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpGet("routers/{routerId}/ppp/secrets")]
+        public async Task<IActionResult> GetAllPppSecrets(int routerId)
+        {
+            var response = await _mikroTikService.GetAllPPPoESecretAsync(routerId);
+            return HandleResponse(response);
+        }
+
+        [HttpPut("routers/{routerId}/ppp/secret")]
+        public async Task<IActionResult> UpdatePppSecretAsync(int routerId, UpdatePPPoESecretRequest request)
+        {
+            var response = await _mikroTikService.UpdatePPPoESecretAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("routers/{routerId}/ppp/secret")]
+        public async Task<IActionResult> CreatePppSecretAsync(int routerId, CreatePPPoESecretRequest request)
+        {
+            var response = await _mikroTikService.CreatePPPoESecretAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpDelete("routers/{routerId}/ppp/secret")]
+        public async Task<IActionResult> DeletePppSecretAsync(int routerId, DeletePPPoESecretRequest request)
+        {
+            var response = await _mikroTikService.DeletePPPoESecretAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+
+        [HttpGet("routers/{routerId}/ppp/server")]
+        public async Task<IActionResult> GetPppServer(int routerId)
+        {
+            var response = await _mikroTikService.GetAllPPPoEServerAsync(routerId);
+            return HandleResponse(response);
+        }
+
+        [HttpPost("routers/{routerId}/ppp/server")]
+        public async Task<IActionResult> CreatePppServerAsync(int routerId, CreatePPPoEServerRequest request)
+        {
+            var response = await _mikroTikService.CreatePPPoEServerAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpPut("routers/{routerId}/ppp/server")]
+        public async Task<IActionResult> UpdatePppServerAsync(int routerId, UpdatePPPoEServerRequest request)
+        {
+            var response = await _mikroTikService.UpdatePPPoEServerAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        [HttpDelete("routers/{routerId}/ppp/server")]
+        public async Task<IActionResult> DeletePppServerAsync(int routerId, DeletePPPoEServerRequest request)
+        {
+            var response = await _mikroTikService.DeletePPPoEServerAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+
+
+
+
         // ============= SYSTEM INFO =============
 
         /// <summary>

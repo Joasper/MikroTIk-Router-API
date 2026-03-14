@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using MikroClean.Application.Interfaces;
 using MikroClean.Application.MikroTik.Operations;
 using MikroClean.Application.Models;
@@ -81,7 +81,7 @@ namespace MikroClean.Application.Services
             try
             {
                 await _connectionManager.WarmUpConnectionsAsync(organizationId);
-                
+
                 var routers = await _routerRepository.GetAvailableRoutersAsync(organizationId);
                 var results = new Dictionary<int, bool>();
 
@@ -318,7 +318,8 @@ namespace MikroClean.Application.Services
                 var query = new GetAllIpPoolsQuery();
                 var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
 
-                if (!result.IsSuccess)                 {
+                if (!result.IsSuccess)
+                {
                     return ApiResponse<List<IpPoolResponse>>.Error(
                         $"Error obteniendo pools de IP: {result.ErrorMessage}",
                         new { ErrorType = result.ErrorType.ToString() }
@@ -344,33 +345,30 @@ namespace MikroClean.Application.Services
         {
             try
             {
-
-                var operation = new CreateIpPoolOperation();
-
-                var result = await _connectionManager.ExecuteOperationAsync(routerId, operation, createPoolRequest);
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new CreateIpPoolOperation(), createPoolRequest);
 
                 if (!result.IsSuccess)
+                    return ApiResponse<IpPoolResponse>.Error($"Error creando IP pool: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
+
+                //var getByIdQuery = new GetIpPoolByIdOperation();
+                //var getResult = await _connectionManager.ExecuteOperationAsync(routerId, getByIdQuery, result.Data!.Id);
+
+                var query = new GetAllIpPoolsQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
                 {
-                    return ApiResponse<IpPoolResponse>.Error(
-                        $"Error creando IP pool: {result.ErrorMessage}",
-                        new { ErrorType = result.ErrorType.ToString() }
-                    );
+                    _logger.LogWarning("No se pudo recuperar la lista de pools después de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<IpPoolResponse>.Warning("Pool creado pero no se pudo recuperar la lista de pools para confirmar", null);
                 }
 
-                var createdId = result.Data!.ToString(); // IpPoolResponse con solo el Id retornado por /add
-                var getByIdQuery = new GetIpPoolByIdOperation(createdId);
-                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, getByIdQuery);
-
-                if (!getResult.IsSuccess || getResult.Data == null)
+                var createdPool = getResult.Data!.FirstOrDefault(p => p.Name == createPoolRequest.Name);
+                if (createdPool == null)
                 {
-                    return ApiResponse<IpPoolResponse>.Error("Pool creado pero no se pudo recuperar el objeto");
+                    _logger.LogWarning("No se pudo encontrar el pool recién creado con nombre {PoolName} en router {RouterId} después de la creación", createPoolRequest.Name, routerId);
+                    return ApiResponse<IpPoolResponse>.Warning("Pool creado pero no se pudo confirmar su existencia en la lista de pools", null);
                 }
 
-                return ApiResponse<IpPoolResponse>.Success(getResult.Data, "IP Pool creado exitosamente");
-
-
-                //return ApiResponse<IpPoolResponse>.Success(result.Data!, "IP Pool creado exitosamente");
-
+                return ApiResponse<IpPoolResponse>.Success(createdPool, "IP Pool creado exitosamente");
 
             }
             catch (Exception e)
@@ -386,23 +384,39 @@ namespace MikroClean.Application.Services
         {
             try
             {
-
-                var operation = new UpdateIpPoolOperation();
-
-                var result = await _connectionManager.ExecuteOperationAsync(routerId, operation, updateIpPoolRequest);
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new UpdateIpPoolOperation(), updateIpPoolRequest);
 
                 if (!result.IsSuccess)
+                    return ApiResponse<IpPoolResponse>.Error($"Error actualizando IP pool: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
+
+                // /set no retorna datos - buscamos el objeto actualizado por su Id
+                //var getByIdQuery = new GetIpPoolByIdOperation();
+                //var getResult = await _connectionManager.ExecuteOperationAsync(routerId, getByIdQuery, updateIpPoolRequest.Id);
+
+                var query = new GetAllIpPoolsQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+
+                if (!getResult.IsSuccess)
                 {
-                    return ApiResponse<IpPoolResponse>.Error(
-                        $"Error actualizando IP pool: {result.ErrorMessage}",
-                        new { ErrorType = result.ErrorType.ToString() }
-                    );
+                    _logger.LogWarning("No se pudo recuperar la lista de pools después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<IpPoolResponse>.Warning("Pool actualizado pero no se pudo recuperar la lista de pools para confirmar", null);
                 }
 
-                return ApiResponse<IpPoolResponse>.Success(result.Data!, "IP Pool actualizado exitosamente");
+                var updatedPool = getResult.Data!.FirstOrDefault(p => p.Id == updateIpPoolRequest.Id);
+                if (updatedPool != null)
+                {
+                    return ApiResponse<IpPoolResponse>.Success(updatedPool, "IP Pool actualizado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el pool actualizado con ID {PoolId} en router {RouterId} después de la actualización", updateIpPoolRequest.Id, routerId);
+                    return ApiResponse<IpPoolResponse>.Warning("Pool actualizado pero no se pudo confirmar su existencia en la lista de pools", null);
 
+                }
 
             }
+
+
             catch (Exception ex)
             {
 
@@ -416,23 +430,380 @@ namespace MikroClean.Application.Services
         {
             try
             {
-                var operation = new DeleteIpPoolOperation();
-                var result = await _connectionManager.ExecuteOperationAsync(routerId, operation, request);
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new DeleteIpPoolOperation(), request);
 
                 if (!result.IsSuccess)
-                {
-                    return ApiResponse<IpPoolResponse>.Error(
-                        $"Error eliminando IP pool: {result.ErrorMessage}",
-                        new { ErrorType = result.ErrorType.ToString() }
-                    );
-                }
+                    return ApiResponse<IpPoolResponse>.Error($"Error eliminando IP pool: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
 
-                return ApiResponse<IpPoolResponse>.Success(result.Data!, "IP Pool eliminado exitosamente");
+                // /remove no retorna datos - devolvemos el Id que fue eliminado
+                return ApiResponse<IpPoolResponse>.Success(new IpPoolResponse { Id = request.Id }, "IP Pool eliminado exitosamente");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error eliminando IP pool en router {RouterId}", routerId);
                 return ApiResponse<IpPoolResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEProfileResponse>> CreatePPPoEProfileAsync(int routerId, CreatePPPoEProfile createPPPoEProfile)
+        {
+            try
+            {
+                var operation = new CreatePPPoEProfileOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, createPPPoEProfile);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoEProfileResponse>.Error(
+                        $"Error creando perfil PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                return ApiResponse<PPPoEProfileResponse>.Success(result.Data!, "Perfil PPPoE creado exitosamente");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creando perfil PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEProfileResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<List<PPPoEProfileResponse>>> GetAllPPPoEProfileAsync(int routerId)
+        {
+            try
+            {
+                var query = new GetAllPppProfilesQuery();
+                var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<List<PPPoEProfileResponse>>.Error(
+                        $"Error obteniendo perfiles PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                return ApiResponse<List<PPPoEProfileResponse>>.Success(
+                    result.Data!,
+                    $"Se encontraron {result.Data!.Count} perfiles PPPoE"
+                );
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error obteniendo perfiles PPPoE del router {RouterId}", routerId);
+                return ApiResponse<List<PPPoEProfileResponse>>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEProfileResponse>> UpdatePPPoEProfileAsync(int routerId, UpdatePPPoEProfile updatePPPoEProfile)
+        {
+            try
+            {
+                var operation = new UpdatePppProfileOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, updatePPPoEProfile);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoEProfileResponse>.Error(
+                        $"Error actualizando perfil PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                // /set no retorna datos - buscamos el objeto actualizado por su Id
+                var query = new GetAllPppProfilesQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de perfiles PPPoE después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE actualizado pero no se pudo recuperar la lista para confirmar", null);
+                }
+                var updatedProfile = getResult.Data!.FirstOrDefault(p => p.Id == updatePPPoEProfile.Id);
+                if (updatedProfile != null)
+                {
+                    return ApiResponse<PPPoEProfileResponse>.Success(updatedProfile, "Perfil PPPoE actualizado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el perfil PPPoE actualizado con ID {ProfileId} en router {RouterId} después de la actualización", updatePPPoEProfile.Id, routerId);
+                    return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE actualizado pero no se pudo confirmar su existencia en la lista", null);
+                }
+
+            }
+            catch (Exception ex) 
+            {
+
+                _logger.LogError(ex, "Error actualizando perfil PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEProfileResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEProfileResponse>> DeletePPPoEProfileAsync(int routerId, DeletePPPoEProfile request)
+        {
+            try
+            {
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new DeletePppProfileOperation(), request);
+                if (!result.IsSuccess)
+                    return ApiResponse<PPPoEProfileResponse>.Error($"Error eliminando perfil PPPoE: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
+
+                return ApiResponse<PPPoEProfileResponse>.Success(new PPPoEProfileResponse { Id = request.Id }, "Perfil PPPoE eliminado exitosamente");
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error eliminando perfil PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEProfileResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<List<PPPoESecretResponse>>> GetAllPPPoESecretAsync(int routerId)
+        {
+            try
+            {
+                var query = new GetAllPppSecretsQuery();
+                var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<List<PPPoESecretResponse>>.Error(
+                        $"Error obteniendo secretos PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                return ApiResponse<List<PPPoESecretResponse>>.Success(
+                    result.Data!,
+                    $"Se encontraron {result.Data!.Count} secretos PPPoE"
+                );
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error obteniendo secretos PPPoE del router {RouterId}", routerId);
+                return ApiResponse<List<PPPoESecretResponse>>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoESecretResponse>> CreatePPPoESecretAsync(int routerId, CreatePPPoESecretRequest createPPPoESecret)
+        {
+            try
+            {
+                var operation = new CreatePPPoESecretOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, createPPPoESecret);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoESecretResponse>.Error(
+                        $"Error creando secreto PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                // /add no retorna datos - buscamos el objeto creado por su nombre
+                var query = new GetAllPppSecretsQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE después de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se creó el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                }
+                var createdSecret = getResult.Data!.FirstOrDefault(s => s.Name == createPPPoESecret.Name);
+                if (createdSecret != null)
+                {
+                    return ApiResponse<PPPoESecretResponse>.Success(createdSecret, "Secreto PPPoE creado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE recién creado con nombre {SecretName} en router {RouterId} después de la creación", createPPPoESecret.Name, routerId);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se creó el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creando secreto PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoESecretResponse>.Error($"Error inesperado: {ex.Message}");
+
+            }
+        }
+
+        public async Task<ApiResponse<PPPoESecretResponse>> UpdatePPPoESecretAsync(int routerId, UpdatePPPoESecretRequest updatePPPoESecret)
+        {
+            try
+            {
+
+                var operation = new UpdatePppSecretOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, updatePPPoESecret);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoESecretResponse>.Error(
+                        $"Error actualizando secreto PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                // /set no retorna datos - buscamos el objeto actualizado por su Id
+                var query = new GetAllPppSecretsQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualizó el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                }
+                var updatedSecret = getResult.Data!.FirstOrDefault(s => s.Id == updatePPPoESecret.Id);
+                if (updatedSecret != null)
+                {
+                    return ApiResponse<PPPoESecretResponse>.Success(updatedSecret, "Secreto PPPoE actualizado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE actualizado con ID {SecretId} en router {RouterId} después de la actualización", updatePPPoESecret.Id, routerId);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualizó el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error actualizando secreto PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoESecretResponse>.Error($"Error inesperado: {ex.Message}");
+
+            }
+        }
+
+        public async Task<ApiResponse<PPPoESecretResponse>> DeletePPPoESecretAsync(int routerId, DeletePPPoESecretRequest request)
+        {
+            try
+            {
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new DeletePppSecretOperation(), request);
+                if (!result.IsSuccess)
+                    return ApiResponse<PPPoESecretResponse>.Error($"Error eliminando secreto PPPoE: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
+                return ApiResponse<PPPoESecretResponse>.Success(new PPPoESecretResponse { Id = request.Id }, "Secreto PPPoE eliminado exitosamente");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error eliminando secreto PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoESecretResponse>.Error($"Error inesperado: {ex.Message}");
+
+            }
+        }
+
+        public async Task<ApiResponse<List<PPPoEServerResponse>>> GetAllPPPoEServerAsync(int routerId)
+        {
+            try
+            {
+
+                var query = new GetAllPppServersQuery();
+                var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<List<PPPoEServerResponse>>.Error(
+                        $"Error obteniendo servidores PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                return ApiResponse<List<PPPoEServerResponse>>.Success(
+                    result.Data!,
+                    $"Se encontraron {result.Data!.Count} servidores PPPoE"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo servidores PPPoE del router {RouterId}", routerId);
+                return ApiResponse<List<PPPoEServerResponse>>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEServerResponse>> CreatePPPoEServerAsync(int routerId, CreatePPPoEServerRequest createPPPoEServer)
+        {
+            try
+            {
+                var operation = new CreatePPPoEServerOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, createPPPoEServer);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoEServerResponse>.Error(
+                        $"Error creando servidor PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                // /add no retorna datos - buscamos el objeto creado por su nombre
+                var query = new GetAllPppServersQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de servidores PPPoE después de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoEServerResponse>.Warning("Se creó el servidor PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                }
+                var createdServer = getResult.Data!.FirstOrDefault(s => s.Name == createPPPoEServer.Name);
+                if (createdServer != null)
+                {
+                    return ApiResponse<PPPoEServerResponse>.Success(createdServer, "Servidor PPPoE creado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el servidor PPPoE recién creado con nombre {ServerName} en router {RouterId} después de la creación", createPPPoEServer.Name, routerId);
+                    return ApiResponse<PPPoEServerResponse>.Warning("Se creó el servidor PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error creando servidor PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEServerResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEServerResponse>> UpdatePPPoEServerAsync(int routerId, UpdatePPPoEServerRequest updatePPPoEServer)
+        {
+            try
+            {
+                var operation = new UpdatePppServerOperation();
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, updatePPPoEServer);
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PPPoEServerResponse>.Error(
+                        $"Error actualizando servidor PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+                // /set no retorna datos - buscamos el objeto actualizado por su Id
+                var query = new GetAllPppServersQuery();
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de servidores PPPoE después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoEServerResponse>.Warning("Se actualizó el servidor PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                }
+                var updatedServer = getResult.Data!.FirstOrDefault(s => s.Id == updatePPPoEServer.Id);
+                if (updatedServer != null)
+                {
+                    return ApiResponse<PPPoEServerResponse>.Success(updatedServer, "Servidor PPPoE actualizado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el servidor PPPoE actualizado con ID {ServerId} en router {RouterId} después de la actualización", updatePPPoEServer.Id, routerId);
+                    return ApiResponse<PPPoEServerResponse>.Warning("Se actualizó el servidor PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error actualizando servidor PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEServerResponse>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResponse<PPPoEServerResponse>> DeletePPPoEServerAsync(int routerId, DeletePPPoEServerRequest request)
+        {
+            try
+            {
+                var result = await _connectionManager.ExecuteMutationAsync(routerId, new DeletePppServerOperation(), request);
+                if (!result.IsSuccess)
+                    return ApiResponse<PPPoEServerResponse>.Error($"Error eliminando servidor PPPoE: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
+                return ApiResponse<PPPoEServerResponse>.Success(new PPPoEServerResponse { Id = request.Id }, "Servidor PPPoE eliminado exitosamente");
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error eliminando servidor PPPoE en router {RouterId}", routerId);
+                return ApiResponse<PPPoEServerResponse>.Error($"Error inesperado: {ex.Message}");
+
             }
         }
     }

@@ -12,7 +12,7 @@ using System.Collections.Concurrent;
 namespace MikroClean.Infrastructure.MikroTik
 {
     /// <summary>
-    /// Gestor central de conexiones MikroTik con pool por organización,
+    /// Gestor central de conexiones MikroTik con pool por organizaciï¿½n,
     /// retry policies y health monitoring
     /// </summary>
     public class MikroTikConnectionManager : IMikroTikConnectionManager, IDisposable
@@ -57,7 +57,7 @@ namespace MikroClean.Infrastructure.MikroTik
                     onRetry: (exception, timespan, attempt, context) =>
                     {
                         _logger.LogWarning(
-                            "Reintentando operación MikroTik. Intento {Attempt}/{MaxAttempts}. Error: {Error}",
+                            "Reintentando operaciï¿½n MikroTik. Intento {Attempt}/{MaxAttempts}. Error: {Error}",
                             attempt, _retryConfig.MaxRetryAttempts, exception.Message
                         );
                     }
@@ -81,7 +81,7 @@ namespace MikroClean.Infrastructure.MikroTik
                     var client = await GetOrCreateClientAsync(routerId, cancellationToken);
                     if (client == null)
                     {
-                        throw new InvalidOperationException($"No se pudo establecer conexión con el router {routerId}");
+                        throw new InvalidOperationException($"No se pudo establecer conexiï¿½n con el router {routerId}");
                     }
 
                     var parameters = operation.BuildParameters(request);
@@ -99,23 +99,23 @@ namespace MikroClean.Infrastructure.MikroTik
                 new Polly.Context { { "routerId", routerId.ToString() } });
 
                 _logger.LogInformation(
-                    "Operación exitosa en router {RouterId}. Comando: {Command}. Intentos: {Attempts}",
+                    "Operaciï¿½n exitosa en router {RouterId}. Comando: {Command}. Intentos: {Attempts}",
                     routerId, operation.Command, attemptCount
                 );
 
                 return MikroTikResult<TResponse>.Success(result, routerId);
             }
-            catch (InvalidOperationException ex) when (ex.Message.Contains("Conexión perdida"))
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Conexiï¿½n perdida"))
             {
                 _logger.LogWarning(
-                    "Conexión perdida con router {RouterId} durante operación {Command}. Limpiando pool.",
+                    "Conexiï¿½n perdida con router {RouterId} durante operaciï¿½n {Command}. Limpiando pool.",
                     routerId, operation.Command
                 );
                 
                 await DisconnectRouterAsync(routerId);
                 
                 return MikroTikResult<TResponse>.Failure(
-                    "La conexión con el router se ha perdido",
+                    "La conexiï¿½n con el router se ha perdido",
                     MikroTikErrorType.ConnectionFailed,
                     routerId
                 );
@@ -124,19 +124,85 @@ namespace MikroClean.Infrastructure.MikroTik
             {
                 _logger.LogError(
                     ex,
-                    "Error ejecutando operación en router {RouterId} después de {Attempts} intentos. Comando: {Command}",
+                    "Error ejecutando operaciï¿½n en router {RouterId} despuï¿½s de {Attempts} intentos. Comando: {Command}",
                     routerId, attemptCount, operation.Command
                 );
 
                 var errorType = ClassifyError(ex);
                 
-                // Si es error de conexión, remover el cliente del pool
+                // Si es error de conexiï¿½n, remover el cliente del pool
                 if (errorType == MikroTikErrorType.ConnectionFailed || 
                     errorType == MikroTikErrorType.AuthenticationFailed)
                 {
                     await DisconnectRouterAsync(routerId);
                 }
 
+                return MikroTikResult<TResponse>.Failure(ex.Message, errorType, routerId);
+            }
+        }
+
+        public async Task<MikroTikResult<TResponse>> ExecuteMutationAsync<TRequest, TResponse>(
+            int routerId,
+            IMikroTikMutation<TRequest, TResponse> operation,
+            TRequest request,
+            CancellationToken cancellationToken = default)
+        {
+            var attemptCount = 0;
+            try
+            {
+                var result = await _retryPolicy.ExecuteAsync(async (context) =>
+                {
+                    attemptCount = context.Count;
+                    var client = await GetOrCreateClientAsync(routerId, cancellationToken);
+                    if (client == null)
+                        throw new InvalidOperationException($"No se pudo establecer conexion con el router {routerId}");
+
+
+                    var parameters = operation.BuildParameters(request);
+
+                    string? rawId = null;
+                    if (operation.Command.EndsWith("/set") ||
+                        operation.Command.EndsWith("/remove") ||
+                        operation.Command.EndsWith("/disable") ||
+                        operation.Command.EndsWith("/enable"))
+                    {
+                        // Para los comandos silenciosos que no retornan ID
+                        await client.ExecuteNonQueryAsync(operation.Command, parameters);
+                    }
+                    else
+                    {
+                        // MikroTik /add retorna el ID ("*9")
+                        var response = await client.ExecuteCommandAsync<dynamic>(operation.Command, parameters);
+                        rawId = response?.ToString();
+                    }
+
+
+                    using (var scope = _serviceProvider.CreateScope())
+                    {
+                        var repo = scope.ServiceProvider.GetRequiredService<IRouterRepository>();
+                        await repo.UpdateLastSeenAsync(routerId, DateTime.UtcNow);
+                    }
+
+                    return operation.ParseResponse(rawId);
+                }, new Polly.Context { { "routerId", routerId.ToString() } });
+
+                _logger.LogInformation(
+                    "Mutacion exitosa en router {RouterId}. Comando: {Command}. Intentos: {Attempts}",
+                    routerId, operation.Command, attemptCount);
+
+                return MikroTikResult<TResponse>.Success(result, routerId);
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("conexion") || ex.Message.Contains("conexi"))
+            {
+                await DisconnectRouterAsync(routerId);
+                return MikroTikResult<TResponse>.Failure("La conexion con el router se ha perdido", MikroTikErrorType.ConnectionFailed, routerId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error en mutacion router {RouterId}. Comando: {Command}", routerId, operation.Command);
+                var errorType = ClassifyError(ex);
+                if (errorType == MikroTikErrorType.ConnectionFailed || errorType == MikroTikErrorType.AuthenticationFailed)
+                    await DisconnectRouterAsync(routerId);
                 return MikroTikResult<TResponse>.Failure(ex.Message, errorType, routerId);
             }
         }
@@ -157,7 +223,7 @@ namespace MikroClean.Infrastructure.MikroTik
                     var client = await GetOrCreateClientAsync(routerId, cancellationToken);
                     if (client == null)
                     {
-                        throw new InvalidOperationException($"No se pudo establecer conexión con el router {routerId}");
+                        throw new InvalidOperationException($"No se pudo establecer conexiï¿½n con el router {routerId}");
                     }
 
                     var responses = await client.ExecuteQueryAsync(query.Command, sentence => sentence);
@@ -175,17 +241,17 @@ namespace MikroClean.Infrastructure.MikroTik
 
                 return MikroTikResult<TResponse>.Success(result, routerId);
             }
-            catch (InvalidOperationException ex) when (ex.Message.Contains("Conexión perdida"))
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Conexiï¿½n perdida"))
             {
                 _logger.LogWarning(
-                    "Conexión perdida con router {RouterId} durante query. Limpiando pool.",
+                    "Conexiï¿½n perdida con router {RouterId} durante query. Limpiando pool.",
                     routerId
                 );
                 
                 await DisconnectRouterAsync(routerId);
                 
                 return MikroTikResult<TResponse>.Failure(
-                    "La conexión con el router se ha perdido",
+                    "La conexiï¿½n con el router se ha perdido",
                     MikroTikErrorType.ConnectionFailed,
                     routerId
                 );
@@ -194,7 +260,7 @@ namespace MikroClean.Infrastructure.MikroTik
             {
                 _logger.LogError(
                     ex,
-                    "Error ejecutando query en router {RouterId} después de {Attempts} intentos",
+                    "Error ejecutando query en router {RouterId} despuï¿½s de {Attempts} intentos",
                     routerId, attemptCount
                 );
 
@@ -260,32 +326,32 @@ namespace MikroClean.Infrastructure.MikroTik
                     if (router == null || !router.IsActive)
                         return false;
 
-                    // Intentar obtener o crear una conexión
+                    // Intentar obtener o crear una conexiï¿½n
                     var client = await GetOrCreateClientAsync(routerId, CancellationToken.None);
                     if (client == null || !client.IsConnected)
                         return false;
 
-                    // Probar la conexión con un comando simple (system identity)
+                    // Probar la conexiï¿½n con un comando simple (system identity)
                     try
                     {
                         var testCommand = "/system/identity/print";
                         var result = await client.ExecuteQueryAsync(testCommand, sentence => sentence);
                         
-                        // Si llegamos aquí, la conexión es válida
+                        // Si llegamos aquï¿½, la conexiï¿½n es vï¿½lida
                         await routerRepository.UpdateLastSeenAsync(routerId, DateTime.UtcNow);
                         return true;
                     }
-                    catch (InvalidOperationException ex) when (ex.Message.Contains("Conexión perdida"))
+                    catch (InvalidOperationException ex) when (ex.Message.Contains("Conexiï¿½n perdida"))
                     {
-                        // La conexión se perdió durante la ejecución - ya fue limpiada por MikroTikClient
-                        _logger.LogWarning("Conexión perdida durante test con router {RouterId}: {Error}", routerId, ex.Message);
+                        // La conexiï¿½n se perdiï¿½ durante la ejecuciï¿½n - ya fue limpiada por MikroTikClient
+                        _logger.LogWarning("Conexiï¿½n perdida durante test con router {RouterId}: {Error}", routerId, ex.Message);
                         await DisconnectRouterAsync(routerId);
                         return false;
                     }
                     catch (Exception ex)
                     {
-                        // Cualquier otro error indica que la conexión no es válida
-                        _logger.LogWarning(ex, "Error en test de conexión con router {RouterId}", routerId);
+                        // Cualquier otro error indica que la conexiï¿½n no es vï¿½lida
+                        _logger.LogWarning(ex, "Error en test de conexiï¿½n con router {RouterId}", routerId);
                         await DisconnectRouterAsync(routerId);
                         return false;
                     }
@@ -293,7 +359,7 @@ namespace MikroClean.Infrastructure.MikroTik
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error probando conexión con router {RouterId}", routerId);
+                _logger.LogError(ex, "Error probando conexiï¿½n con router {RouterId}", routerId);
                 return false;
             }
         }
@@ -306,7 +372,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 if (client == null)
                 {
                     return MikroTikResult<bool>.Failure(
-                        $"No se pudo establecer conexión con el router {routerId}",
+                        $"No se pudo establecer conexiï¿½n con el router {routerId}",
                         MikroTikErrorType.ConnectionFailed,
                         routerId
                     );
@@ -316,7 +382,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 var parameters = new Dictionary<string, string>();
                 await client.ExecuteNonQueryAsync("/system/reboot", parameters);
 
-                // Cerrar la conexión ya que el router se va a reiniciar
+                // Cerrar la conexiï¿½n ya que el router se va a reiniciar
                 await DisconnectRouterAsync(routerId);
 
                 _logger.LogInformation("Router {RouterId} reiniciado exitosamente", routerId);
@@ -339,7 +405,7 @@ namespace MikroClean.Infrastructure.MikroTik
             if (_organizationPools.TryRemove(organizationId, out var pool))
             {
                 _logger.LogInformation(
-                    "Cerrando todas las conexiones de la organización {OrganizationId}. Routers activos: {Count}",
+                    "Cerrando todas las conexiones de la organizaciï¿½n {OrganizationId}. Routers activos: {Count}",
                     organizationId, pool.ActiveConnectionCount
                 );
                 
@@ -362,7 +428,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 var pool = GetPoolForRouter(router.OrganizationId);
                 pool?.ReleaseConnection(routerId);
 
-                _logger.LogInformation("Conexión cerrada para router {RouterId}", routerId);
+                _logger.LogInformation("Conexiï¿½n cerrada para router {RouterId}", routerId);
             }
         }
 
@@ -374,7 +440,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 var routers = await routerRepository.GetAvailableRoutersAsync(organizationId);
                 
                 _logger.LogInformation(
-                    "Pre-calentando conexiones para organización {OrganizationId}. Routers: {Count}",
+                    "Pre-calentando conexiones para organizaciï¿½n {OrganizationId}. Routers: {Count}",
                     organizationId, routers.Count()
                 );
 
@@ -422,7 +488,7 @@ namespace MikroClean.Infrastructure.MikroTik
                     }
 
                     _logger.LogInformation(
-                        "Nueva conexión establecida con router {RouterId} de organización {OrganizationId}",
+                        "Nueva conexiï¿½n establecida con router {RouterId} de organizaciï¿½n {OrganizationId}",
                         routerId, router.OrganizationId
                     );
 
@@ -456,7 +522,7 @@ namespace MikroClean.Infrastructure.MikroTik
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Error desencriptando password del router {RouterId}", routerId);
-                        throw new InvalidOperationException("No se pudo desencriptar la contraseña del router", ex);
+                        throw new InvalidOperationException("No se pudo desencriptar la contraseï¿½a del router", ex);
                     }
                     
                     _cache.Set(cacheKey, router, TimeSpan.FromMinutes(5));
