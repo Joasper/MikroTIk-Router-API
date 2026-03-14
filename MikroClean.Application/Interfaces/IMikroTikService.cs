@@ -80,16 +80,16 @@ namespace MikroClean.Application.Interfaces
         // ============= PPP =============
 
         /// <summary>
-        /// Obtiene informaci�n de recursos del sistema
+        /// Obtiene los perfiles PPPoE de un router con paginacin
         /// </summary>
-        Task<ApiResponse<List<PPPoEProfileResponse>>> GetAllPPPoEProfileAsync(int routerId);
+        Task<ApiResponse<PagedResult<PPPoEProfileResponse>>> GetPPPoEProfilesPagedAsync(int routerId, PaginationParams paginationParams);
 
         Task<ApiResponse<PPPoEProfileResponse>> CreatePPPoEProfileAsync(int routerId, CreatePPPoEProfile createPPPoEProfile);
         Task<ApiResponse<PPPoEProfileResponse>> UpdatePPPoEProfileAsync(int routerId, UpdatePPPoEProfile updatePPPoEProfile);
 
         Task<ApiResponse<PPPoEProfileResponse>> DeletePPPoEProfileAsync(int routerId, DeletePPPoEProfile request);
 
-        Task<ApiResponse<List<PPPoESecretResponse>>> GetAllPPPoESecretAsync(int routerId);
+        Task<ApiResponse<PagedResult<PPPoESecretResponse>>> GetPPPoESecretsPagedAsync(int routerId, PaginationParams paginationParams);
         Task<ApiResponse<PPPoESecretResponse>> CreatePPPoESecretAsync(int routerId, CreatePPPoESecretRequest createPPPoESecret);
         Task<ApiResponse<PPPoESecretResponse>> UpdatePPPoESecretAsync(int routerId, UpdatePPPoESecretRequest updatePPPoESecret);
         Task<ApiResponse<PPPoESecretResponse>> DeletePPPoESecretAsync(int routerId, DeletePPPoESecretRequest request);

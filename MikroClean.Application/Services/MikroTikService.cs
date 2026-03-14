@@ -326,8 +326,38 @@ namespace MikroClean.Application.Services
                 }
 
                 var allPools = result.Data ?? new List<IpPoolResponse>();
+
+                // Filtrado (SearchTerm)
+                if (!string.IsNullOrWhiteSpace(paginationParams.SearchTerm))
+                {
+                    var term = paginationParams.SearchTerm.ToLower();
+                    allPools = allPools.Where(p => 
+                        p.Name.ToLower().Contains(term) || 
+                        p.Ranges.ToLower().Contains(term) || 
+                        (p.NextPool != null && p.NextPool.ToLower().Contains(term)) ||
+                        (p.Comment != null && p.Comment.ToLower().Contains(term))
+                    ).ToList();
+                }
+
+                // Ordenamiento
+                if (!string.IsNullOrWhiteSpace(paginationParams.SortBy))
+                {
+                    var propertyInfo = typeof(IpPoolResponse).GetProperty(paginationParams.SortBy, 
+                        System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    
+                    if (propertyInfo != null)
+                    {
+                        allPools = paginationParams.SortDescending 
+                            ? allPools.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList()
+                            : allPools.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+                    }
+                }
+                else
+                {
+                    allPools = allPools.OrderBy(p => p.Name).ToList();
+                }
+
                 var totalCount = allPools.Count;
-                
                 var pagedItems = allPools
                     .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
                     .Take(paginationParams.PageSize)
@@ -465,10 +495,95 @@ namespace MikroClean.Application.Services
             }
         }
 
+        public async Task<ApiResponse<PagedResult<PPPoEProfileResponse>>> GetPPPoEProfilesPagedAsync(int routerId, PaginationParams paginationParams)
+        {
+            try
+            {
+                var query = new GetAllPppProfilesQuery();
+                var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
+
+                if (!result.IsSuccess)
+                {
+                    return ApiResponse<PagedResult<PPPoEProfileResponse>>.Error(
+                        $"Error obteniendo perfiles PPPoE: {result.ErrorMessage}",
+                        new { ErrorType = result.ErrorType.ToString() }
+                    );
+                }
+
+                var allProfiles = result.Data ?? new List<PPPoEProfileResponse>();
+
+                // Filtrado (SearchTerm)
+                if (!string.IsNullOrWhiteSpace(paginationParams.SearchTerm))
+                {
+                    var term = paginationParams.SearchTerm.ToLower();
+                    allProfiles = allProfiles.Where(p => 
+                        p.Name.ToLower().Contains(term) || 
+                        p.LocalAddress.ToLower().Contains(term) || 
+                        p.RemoteAddress.ToLower().Contains(term) ||
+                        (p.Comment != null && p.Comment.ToLower().Contains(term))
+                    ).ToList();
+                }
+
+                // Ordenamiento
+                if (!string.IsNullOrWhiteSpace(paginationParams.SortBy))
+                {
+                    var propertyInfo = typeof(PPPoEProfileResponse).GetProperty(paginationParams.SortBy, 
+                        System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    
+                    if (propertyInfo != null)
+                    {
+                        allProfiles = paginationParams.SortDescending 
+                            ? allProfiles.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList()
+                            : allProfiles.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+                    }
+                }
+                else
+                {
+                    allProfiles = allProfiles.OrderBy(p => p.Name).ToList();
+                }
+
+                var totalCount = allProfiles.Count;
+                var pagedItems = allProfiles
+                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize)
+                    .ToList();
+
+                var pagedResult = new PagedResult<PPPoEProfileResponse>
+                {
+                    Items = pagedItems,
+                    TotalCount = totalCount,
+                    PageNumber = paginationParams.PageNumber,
+                    PageSize = paginationParams.PageSize
+                };
+
+                return ApiResponse<PagedResult<PPPoEProfileResponse>>.Success(
+                    pagedResult,
+                    $"Se encontraron {totalCount} perfiles PPPoE (Pgina {paginationParams.PageNumber})"
+                );
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error obteniendo perfiles PPPoE paginados del router {RouterId}", routerId);
+                return ApiResponse<PagedResult<PPPoEProfileResponse>>.Error($"Error inesperado: {ex.Message}");
+            }
+        }
+
         public async Task<ApiResponse<PPPoEProfileResponse>> CreatePPPoEProfileAsync(int routerId, CreatePPPoEProfile createPPPoEProfile)
         {
             try
             {
+                // Validacin: No permitir nombres duplicados
+                var query = new GetAllPppProfilesQuery();
+                var existingProfilesResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingProfilesResult.IsSuccess && existingProfilesResult.Data != null)
+                {
+                    if (existingProfilesResult.Data.Any(p => p.Name.Equals(createPPPoEProfile.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return ApiResponse<PPPoEProfileResponse>.Error($"Ya existe un perfil PPPoE con el nombre '{createPPPoEProfile.Name}'");
+                    }
+                }
+
                 var operation = new CreatePPPoEProfileOperation();
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, createPPPoEProfile);
                 if (!result.IsSuccess)
@@ -478,8 +593,25 @@ namespace MikroClean.Application.Services
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
-                return ApiResponse<PPPoEProfileResponse>.Success(result.Data!, "Perfil PPPoE creado exitosamente");
 
+                // Confirmar creacin
+                var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                if (!getResult.IsSuccess)
+                {
+                    _logger.LogWarning("No se pudo recuperar la lista de perfiles PPPoE despus de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE creado pero no se pudo recuperar la lista para confirmar", null);
+                }
+
+                var createdProfile = getResult.Data!.FirstOrDefault(p => p.Name == createPPPoEProfile.Name);
+                if (createdProfile != null)
+                {
+                    return ApiResponse<PPPoEProfileResponse>.Success(createdProfile, "Perfil PPPoE creado exitosamente");
+                }
+                else
+                {
+                    _logger.LogWarning("No se pudo encontrar el perfil PPPoE recin creado con nombre {ProfileName} en router {RouterId} despus de la creacin", createPPPoEProfile.Name, routerId);
+                    return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE creado pero no se pudo confirmar su existencia en la lista", null);
+                }
             }
             catch (Exception ex)
             {
@@ -488,37 +620,22 @@ namespace MikroClean.Application.Services
             }
         }
 
-        public async Task<ApiResponse<List<PPPoEProfileResponse>>> GetAllPPPoEProfileAsync(int routerId)
-        {
-            try
-            {
-                var query = new GetAllPppProfilesQuery();
-                var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
-                if (!result.IsSuccess)
-                {
-                    return ApiResponse<List<PPPoEProfileResponse>>.Error(
-                        $"Error obteniendo perfiles PPPoE: {result.ErrorMessage}",
-                        new { ErrorType = result.ErrorType.ToString() }
-                    );
-                }
-                return ApiResponse<List<PPPoEProfileResponse>>.Success(
-                    result.Data!,
-                    $"Se encontraron {result.Data!.Count} perfiles PPPoE"
-                );
-
-            }
-            catch (Exception ex)
-            {
-
-                _logger.LogError(ex, "Error obteniendo perfiles PPPoE del router {RouterId}", routerId);
-                return ApiResponse<List<PPPoEProfileResponse>>.Error($"Error inesperado: {ex.Message}");
-            }
-        }
-
         public async Task<ApiResponse<PPPoEProfileResponse>> UpdatePPPoEProfileAsync(int routerId, UpdatePPPoEProfile updatePPPoEProfile)
         {
             try
             {
+                // Validacin: No permitir nombres duplicados
+                var query = new GetAllPppProfilesQuery();
+                var existingProfilesResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingProfilesResult.IsSuccess && existingProfilesResult.Data != null && !string.IsNullOrEmpty(updatePPPoEProfile.Name))
+                {
+                    if (existingProfilesResult.Data.Any(p => p.Name.Equals(updatePPPoEProfile.Name, StringComparison.OrdinalIgnoreCase) && p.Id != updatePPPoEProfile.Id))
+                    {
+                        return ApiResponse<PPPoEProfileResponse>.Error($"Ya existe otro perfil PPPoE con el nombre '{updatePPPoEProfile.Name}'");
+                    }
+                }
+
                 var operation = new UpdatePppProfileOperation();
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, updatePPPoEProfile);
                 if (!result.IsSuccess)
@@ -528,14 +645,15 @@ namespace MikroClean.Application.Services
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
-                // /set no retorna datos - buscamos el objeto actualizado por su Id
-                var query = new GetAllPppProfilesQuery();
+                
+                // Confirmar actualizacin
                 var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
                 if (!getResult.IsSuccess)
                 {
-                    _logger.LogWarning("No se pudo recuperar la lista de perfiles PPPoE después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    _logger.LogWarning("No se pudo recuperar la lista de perfiles PPPoE despus de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
                     return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE actualizado pero no se pudo recuperar la lista para confirmar", null);
                 }
+
                 var updatedProfile = getResult.Data!.FirstOrDefault(p => p.Id == updatePPPoEProfile.Id);
                 if (updatedProfile != null)
                 {
@@ -543,14 +661,12 @@ namespace MikroClean.Application.Services
                 }
                 else
                 {
-                    _logger.LogWarning("No se pudo encontrar el perfil PPPoE actualizado con ID {ProfileId} en router {RouterId} después de la actualización", updatePPPoEProfile.Id, routerId);
+                    _logger.LogWarning("No se pudo encontrar el perfil PPPoE actualizado con ID {ProfileId} en router {RouterId} despus de la actualizacin", updatePPPoEProfile.Id, routerId);
                     return ApiResponse<PPPoEProfileResponse>.Warning("Perfil PPPoE actualizado pero no se pudo confirmar su existencia en la lista", null);
                 }
-
             }
             catch (Exception ex) 
             {
-
                 _logger.LogError(ex, "Error actualizando perfil PPPoE en router {RouterId}", routerId);
                 return ApiResponse<PPPoEProfileResponse>.Error($"Error inesperado: {ex.Message}");
             }
@@ -575,30 +691,77 @@ namespace MikroClean.Application.Services
             }
         }
 
-        public async Task<ApiResponse<List<PPPoESecretResponse>>> GetAllPPPoESecretAsync(int routerId)
+        public async Task<ApiResponse<PagedResult<PPPoESecretResponse>>> GetPPPoESecretsPagedAsync(int routerId, PaginationParams paginationParams)
         {
             try
             {
                 var query = new GetAllPppSecretsQuery();
                 var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
+
                 if (!result.IsSuccess)
                 {
-                    return ApiResponse<List<PPPoESecretResponse>>.Error(
+                    return ApiResponse<PagedResult<PPPoESecretResponse>>.Error(
                         $"Error obteniendo secretos PPPoE: {result.ErrorMessage}",
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
-                return ApiResponse<List<PPPoESecretResponse>>.Success(
-                    result.Data!,
-                    $"Se encontraron {result.Data!.Count} secretos PPPoE"
-                );
 
+                var allSecrets = result.Data ?? new List<PPPoESecretResponse>();
+
+                // Filtrado (SearchTerm)
+                if (!string.IsNullOrWhiteSpace(paginationParams.SearchTerm))
+                {
+                    var term = paginationParams.SearchTerm.ToLower();
+                    allSecrets = allSecrets.Where(s => 
+                        s.Name.ToLower().Contains(term) || 
+                        s.Service.ToLower().Contains(term) || 
+                        s.Profile.ToLower().Contains(term) ||
+                        (s.Comment != null && s.Comment.ToLower().Contains(term))
+                    ).ToList();
+                }
+
+                // Ordenamiento
+                if (!string.IsNullOrWhiteSpace(paginationParams.SortBy))
+                {
+                    var propertyInfo = typeof(PPPoESecretResponse).GetProperty(paginationParams.SortBy, 
+                        System.Reflection.BindingFlags.IgnoreCase | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                    
+                    if (propertyInfo != null)
+                    {
+                        allSecrets = paginationParams.SortDescending 
+                            ? allSecrets.OrderByDescending(x => propertyInfo.GetValue(x, null)).ToList()
+                            : allSecrets.OrderBy(x => propertyInfo.GetValue(x, null)).ToList();
+                    }
+                }
+                else
+                {
+                    // Orden por defecto
+                    allSecrets = allSecrets.OrderBy(s => s.Name).ToList();
+                }
+
+                var totalCount = allSecrets.Count;
+                var pagedItems = allSecrets
+                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize)
+                    .ToList();
+
+                var pagedResult = new PagedResult<PPPoESecretResponse>
+                {
+                    Items = pagedItems,
+                    TotalCount = totalCount,
+                    PageNumber = paginationParams.PageNumber,
+                    PageSize = paginationParams.PageSize
+                };
+
+                return ApiResponse<PagedResult<PPPoESecretResponse>>.Success(
+                    pagedResult,
+                    $"Se encontraron {totalCount} secretos PPPoE (Pgina {paginationParams.PageNumber})"
+                );
             }
             catch (Exception ex)
             {
-
-                _logger.LogError(ex, "Error obteniendo secretos PPPoE del router {RouterId}", routerId);
-                return ApiResponse<List<PPPoESecretResponse>>.Error($"Error inesperado: {ex.Message}");
+                _logger.LogError(ex, "Error obteniendo secretos PPPoE paginados del router {RouterId}", routerId);
+                return ApiResponse<PagedResult<PPPoESecretResponse>>.Error($"Error inesperado: {ex.Message}");
             }
         }
 
@@ -606,6 +769,18 @@ namespace MikroClean.Application.Services
         {
             try
             {
+                // Validacin: No permitir nombres duplicados
+                var query = new GetAllPppSecretsQuery();
+                var existingSecretsResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingSecretsResult.IsSuccess && existingSecretsResult.Data != null)
+                {
+                    if (existingSecretsResult.Data.Any(s => s.Name.Equals(createPPPoESecret.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return ApiResponse<PPPoESecretResponse>.Error($"Ya existe un PPPoE Secret con el nombre '{createPPPoESecret.Name}'");
+                    }
+                }
+
                 var operation = new CreatePPPoESecretOperation();
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, createPPPoESecret);
                 if (!result.IsSuccess)
@@ -615,14 +790,15 @@ namespace MikroClean.Application.Services
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
-                // /add no retorna datos - buscamos el objeto creado por su nombre
-                var query = new GetAllPppSecretsQuery();
+                
+                // Confirmar creacin
                 var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
                 if (!getResult.IsSuccess)
                 {
-                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE después de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
-                    return ApiResponse<PPPoESecretResponse>.Warning("Se creó el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE despus de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se cre el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
                 }
+                
                 var createdSecret = getResult.Data!.FirstOrDefault(s => s.Name == createPPPoESecret.Name);
                 if (createdSecret != null)
                 {
@@ -630,16 +806,14 @@ namespace MikroClean.Application.Services
                 }
                 else
                 {
-                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE recién creado con nombre {SecretName} en router {RouterId} después de la creación", createPPPoESecret.Name, routerId);
-                    return ApiResponse<PPPoESecretResponse>.Warning("Se creó el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE recin creado con nombre {SecretName} en router {RouterId} despus de la creacin", createPPPoESecret.Name, routerId);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se cre el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
                 }
-
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error creando secreto PPPoE en router {RouterId}", routerId);
                 return ApiResponse<PPPoESecretResponse>.Error($"Error inesperado: {ex.Message}");
-
             }
         }
 
@@ -647,6 +821,17 @@ namespace MikroClean.Application.Services
         {
             try
             {
+                // Validacin: No permitir nombres duplicados
+                var query = new GetAllPppSecretsQuery();
+                var existingSecretsResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingSecretsResult.IsSuccess && existingSecretsResult.Data != null && !string.IsNullOrEmpty(updatePPPoESecret.Name))
+                {
+                    if (existingSecretsResult.Data.Any(s => s.Name.Equals(updatePPPoESecret.Name, StringComparison.OrdinalIgnoreCase) && s.Id != updatePPPoESecret.Id))
+                    {
+                        return ApiResponse<PPPoESecretResponse>.Error($"Ya existe otro PPPoE Secret con el nombre '{updatePPPoESecret.Name}'");
+                    }
+                }
 
                 var operation = new UpdatePppSecretOperation();
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, operation, updatePPPoESecret);
@@ -657,14 +842,15 @@ namespace MikroClean.Application.Services
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
-                // /set no retorna datos - buscamos el objeto actualizado por su Id
-                var query = new GetAllPppSecretsQuery();
+                
+                // Confirmar actualizacin
                 var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
                 if (!getResult.IsSuccess)
                 {
-                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
-                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualizó el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
+                    _logger.LogWarning("No se pudo recuperar la lista de secretos PPPoE despus de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualiz el secreto PPPoE pero no se pudo recuperar la lista para confirmar", null);
                 }
+                
                 var updatedSecret = getResult.Data!.FirstOrDefault(s => s.Id == updatePPPoESecret.Id);
                 if (updatedSecret != null)
                 {
@@ -672,15 +858,14 @@ namespace MikroClean.Application.Services
                 }
                 else
                 {
-                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE actualizado con ID {SecretId} en router {RouterId} después de la actualización", updatePPPoESecret.Id, routerId);
-                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualizó el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
+                    _logger.LogWarning("No se pudo encontrar el secreto PPPoE actualizado con ID {SecretId} en router {RouterId} despus de la actualizacin", updatePPPoESecret.Id, routerId);
+                    return ApiResponse<PPPoESecretResponse>.Warning("Se actualiz el secreto PPPoE pero no se pudo confirmar su existencia en la lista", null);
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error actualizando secreto PPPoE en router {RouterId}", routerId);
                 return ApiResponse<PPPoESecretResponse>.Error($"Error inesperado: {ex.Message}");
-
             }
         }
 

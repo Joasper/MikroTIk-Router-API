@@ -9,13 +9,19 @@ Este documento detalla los endpoints, parmetros y respuestas del mdulo de gestin
 
 ---
 
-## 1. Listar IP Pools (Paginado)
-Obtiene la lista de pools de IP configurados en el router, aplicando paginacin.
+## 1. Listar IP Pools (Paginado, Filtrado y Ordenado)
+Obtiene la lista de pools de IP configurados en el router, aplicando paginacin, bsqueda y ordenamiento.
 
 - **URL:** `GET /api/MikroTik/routers/{routerId}/ip/pools`
 - **Query Parameters:**
   - `pageNumber` (int, default: 1): Nmero de pgina.
   - `pageSize` (int, default: 10): Cantidad de elementos por pgina.
+  - `searchTerm` (string, opcional): Trmino de bsqueda. Filtra por `name`, `ranges`, `nextPool` o `comment`.
+  - `sortBy` (string, opcional): Nombre de la columna por la cual ordenar (ej: `name`, `ranges`, `nextPool`).
+  - `sortDescending` (bool, default: false): `true` para orden descendente, `false` para ascendente.
+
+### Ejemplo de bsqueda y ordenamiento:
+`GET /api/MikroTik/routers/1/ip/pools?searchTerm=dhcp&sortBy=name&sortDescending=false`
 
 ### Respuesta Exitosa (200 OK)
 ```json

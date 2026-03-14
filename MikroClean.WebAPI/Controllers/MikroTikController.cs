@@ -165,9 +165,9 @@ namespace MikroClean.WebAPI.Controllers
 
 
         [HttpGet("routers/{routerId}/ppp/profiles")]
-        public async Task<IActionResult> GetAllPppProfiles(int routerId)
+        public async Task<IActionResult> GetAllPppProfiles(int routerId, [FromQuery] PaginationParams paginationParams)
         {
-            var response = await _mikroTikService.GetAllPPPoEProfileAsync(routerId);
+            var response = await _mikroTikService.GetPPPoEProfilesPagedAsync(routerId, paginationParams);
             return HandleResponse(response);
         }
 
@@ -203,9 +203,9 @@ namespace MikroClean.WebAPI.Controllers
         }
 
         [HttpGet("routers/{routerId}/ppp/secrets")]
-        public async Task<IActionResult> GetAllPppSecrets(int routerId)
+        public async Task<IActionResult> GetAllPppSecrets(int routerId, [FromQuery] PaginationParams paginationParams)
         {
-            var response = await _mikroTikService.GetAllPPPoESecretAsync(routerId);
+            var response = await _mikroTikService.GetPPPoESecretsPagedAsync(routerId, paginationParams);
             return HandleResponse(response);
         }
 
