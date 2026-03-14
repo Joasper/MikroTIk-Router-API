@@ -9,20 +9,20 @@ namespace MikroClean.Application.Interfaces
     /// </summary>
     public interface IMikroTikService
     {
-        // ============= GESTIÓN DE CONEXIONES =============
+        // ============= GESTIï¿½N DE CONEXIONES =============
         
         /// <summary>
-        /// Prueba la conexión a un router específico
+        /// Prueba la conexiï¿½n a un router especï¿½fico
         /// </summary>
         Task<ApiResponse<RouterConnectionStatus>> TestRouterConnectionAsync(int routerId);
 
         /// <summary>
-        /// Obtiene el estado de conexión de un router
+        /// Obtiene el estado de conexiï¿½n de un router
         /// </summary>
         Task<ApiResponse<RouterConnectionStatus>> GetRouterStatusAsync(int routerId);
 
         /// <summary>
-        /// Pre-calienta las conexiones de todos los routers de una organización
+        /// Pre-calienta las conexiones de todos los routers de una organizaciï¿½n
         /// </summary>
         Task<ApiResponse<Dictionary<int, bool>>> WarmUpOrganizationConnectionsAsync(int organizationId);
 
@@ -46,7 +46,7 @@ namespace MikroClean.Application.Interfaces
         // ============= IP ADDRESS =============
         
         /// <summary>
-        /// Agrega una dirección IP a una interfaz
+        /// Agrega una direcciï¿½n IP a una interfaz
         /// </summary>
         Task<ApiResponse<IpAddressResponse>> CreateIpAddressAsync(int routerId, CreateIpAddressRequest request);
 
@@ -60,16 +60,16 @@ namespace MikroClean.Application.Interfaces
         // ============= SYSTEM INFO =============
 
         /// <summary>
-        /// Obtiene información de recursos del sistema
+        /// Obtiene informaciï¿½n de recursos del sistema
         /// </summary>
         //Task<ApiResponse<FirewallRuleResponse>> CreateFirewallRuleAsync(int routerId, CreateFirewallRuleRequest request);
 
         // ============= IP POOLS =============
 
         /// <summary>
-        /// Obtiene información de recursos del sistema
+        /// Obtiene los pools de IP de un router con paginacin
         /// </summary>
-        Task<ApiResponse<List<IpPoolResponse>>> GetAllIpPoolsAsync(int routerId);
+        Task<ApiResponse<PagedResult<IpPoolResponse>>> GetIpPoolsPagedAsync(int routerId, PaginationParams paginationParams);
 
         Task<ApiResponse<IpPoolResponse>> CreateIpPoolAsync(int routerId, CreateIpPoolRequest createPoolRequest);
         Task<ApiResponse<IpPoolResponse>> UpdateIpPoolAsync(int routerId, UpdateIpPoolRequest updateIpPoolRequest);
@@ -80,7 +80,7 @@ namespace MikroClean.Application.Interfaces
         // ============= PPP =============
 
         /// <summary>
-        /// Obtiene información de recursos del sistema
+        /// Obtiene informaciï¿½n de recursos del sistema
         /// </summary>
         Task<ApiResponse<List<PPPoEProfileResponse>>> GetAllPPPoEProfileAsync(int routerId);
 
@@ -104,7 +104,7 @@ namespace MikroClean.Application.Interfaces
         // ============= OPERACIONES EN BATCH =============
 
         /// <summary>
-        /// Ejecuta una operación en múltiples routers de una organización
+        /// Ejecuta una operaciï¿½n en mï¿½ltiples routers de una organizaciï¿½n
         /// </summary>
         Task<ApiResponse<Dictionary<int, MikroTikResult<TResponse>>>> ExecuteOnMultipleRoutersAsync<TRequest, TResponse>(
             int organizationId,

@@ -310,34 +310,46 @@ namespace MikroClean.Application.Services
             }
         }
 
-        public async Task<ApiResponse<List<IpPoolResponse>>> GetAllIpPoolsAsync(int routerId)
+        public async Task<ApiResponse<PagedResult<IpPoolResponse>>> GetIpPoolsPagedAsync(int routerId, PaginationParams paginationParams)
         {
             try
             {
-
                 var query = new GetAllIpPoolsQuery();
                 var result = await _connectionManager.ExecuteQueryAsync(routerId, query);
 
                 if (!result.IsSuccess)
                 {
-                    return ApiResponse<List<IpPoolResponse>>.Error(
+                    return ApiResponse<PagedResult<IpPoolResponse>>.Error(
                         $"Error obteniendo pools de IP: {result.ErrorMessage}",
                         new { ErrorType = result.ErrorType.ToString() }
                     );
                 }
 
-                return ApiResponse<List<IpPoolResponse>>.Success(
-                    result.Data,
-                    $"Se encontraron {result.Data.Count} pools de IP"
-                );
+                var allPools = result.Data ?? new List<IpPoolResponse>();
+                var totalCount = allPools.Count;
+                
+                var pagedItems = allPools
+                    .Skip((paginationParams.PageNumber - 1) * paginationParams.PageSize)
+                    .Take(paginationParams.PageSize)
+                    .ToList();
 
+                var pagedResult = new PagedResult<IpPoolResponse>
+                {
+                    Items = pagedItems,
+                    TotalCount = totalCount,
+                    PageNumber = paginationParams.PageNumber,
+                    PageSize = paginationParams.PageSize
+                };
+
+                return ApiResponse<PagedResult<IpPoolResponse>>.Success(
+                    pagedResult,
+                    $"Se encontraron {totalCount} pools de IP (Pgina {paginationParams.PageNumber})"
+                );
             }
             catch (Exception e)
             {
-
-                _logger.LogError(e, "Error obteniendo pools de IP del router {RouterId}", routerId);
-                return ApiResponse<List<IpPoolResponse>>.Error($"Error inesperado: {e.Message}");
-
+                _logger.LogError(e, "Error obteniendo pools de IP paginados del router {RouterId}", routerId);
+                return ApiResponse<PagedResult<IpPoolResponse>>.Error($"Error inesperado: {e.Message}");
             }
         }
 
@@ -345,38 +357,44 @@ namespace MikroClean.Application.Services
         {
             try
             {
+                // Validacin: No permitir nombres duplicados
+                var query = new GetAllIpPoolsQuery();
+                var existingPoolsResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingPoolsResult.IsSuccess && existingPoolsResult.Data != null)
+                {
+                    if (existingPoolsResult.Data.Any(p => p.Name.Equals(createPoolRequest.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        return ApiResponse<IpPoolResponse>.Error($"Ya existe un IP Pool con el nombre '{createPoolRequest.Name}'");
+                    }
+                }
+
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, new CreateIpPoolOperation(), createPoolRequest);
 
                 if (!result.IsSuccess)
                     return ApiResponse<IpPoolResponse>.Error($"Error creando IP pool: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
 
-                //var getByIdQuery = new GetIpPoolByIdOperation();
-                //var getResult = await _connectionManager.ExecuteOperationAsync(routerId, getByIdQuery, result.Data!.Id);
-
-                var query = new GetAllIpPoolsQuery();
+                // Confirmar creacin y obtener datos completos
                 var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
                 if (!getResult.IsSuccess)
                 {
-                    _logger.LogWarning("No se pudo recuperar la lista de pools después de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    _logger.LogWarning("No se pudo recuperar la lista de pools despus de crear uno nuevo en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
                     return ApiResponse<IpPoolResponse>.Warning("Pool creado pero no se pudo recuperar la lista de pools para confirmar", null);
                 }
 
                 var createdPool = getResult.Data!.FirstOrDefault(p => p.Name == createPoolRequest.Name);
                 if (createdPool == null)
                 {
-                    _logger.LogWarning("No se pudo encontrar el pool recién creado con nombre {PoolName} en router {RouterId} después de la creación", createPoolRequest.Name, routerId);
+                    _logger.LogWarning("No se pudo encontrar el pool recin creado con nombre {PoolName} en router {RouterId} despus de la creacin", createPoolRequest.Name, routerId);
                     return ApiResponse<IpPoolResponse>.Warning("Pool creado pero no se pudo confirmar su existencia en la lista de pools", null);
                 }
 
                 return ApiResponse<IpPoolResponse>.Success(createdPool, "IP Pool creado exitosamente");
-
             }
             catch (Exception e)
             {
-
                 _logger.LogError(e, "Error creando IP pool en router {RouterId}", routerId);
                 return ApiResponse<IpPoolResponse>.Error($"Error inesperado: {e.Message}");
-
             }
         }
 
@@ -384,21 +402,29 @@ namespace MikroClean.Application.Services
         {
             try
             {
+                // Validacin: No permitir nombres duplicados (si se est cambiando el nombre)
+                var query = new GetAllIpPoolsQuery();
+                var existingPoolsResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
+                
+                if (existingPoolsResult.IsSuccess && existingPoolsResult.Data != null && !string.IsNullOrEmpty(updateIpPoolRequest.Name))
+                {
+                    if (existingPoolsResult.Data.Any(p => p.Name.Equals(updateIpPoolRequest.Name, StringComparison.OrdinalIgnoreCase) && p.Id != updateIpPoolRequest.Id))
+                    {
+                        return ApiResponse<IpPoolResponse>.Error($"Ya existe otro IP Pool con el nombre '{updateIpPoolRequest.Name}'");
+                    }
+                }
+
                 var result = await _connectionManager.ExecuteMutationAsync(routerId, new UpdateIpPoolOperation(), updateIpPoolRequest);
 
                 if (!result.IsSuccess)
                     return ApiResponse<IpPoolResponse>.Error($"Error actualizando IP pool: {result.ErrorMessage}", new { ErrorType = result.ErrorType.ToString() });
 
-                // /set no retorna datos - buscamos el objeto actualizado por su Id
-                //var getByIdQuery = new GetIpPoolByIdOperation();
-                //var getResult = await _connectionManager.ExecuteOperationAsync(routerId, getByIdQuery, updateIpPoolRequest.Id);
-
-                var query = new GetAllIpPoolsQuery();
+                // Confirmar actualizacin
                 var getResult = await _connectionManager.ExecuteQueryAsync(routerId, query);
 
                 if (!getResult.IsSuccess)
                 {
-                    _logger.LogWarning("No se pudo recuperar la lista de pools después de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
+                    _logger.LogWarning("No se pudo recuperar la lista de pools despus de actualizar uno en router {RouterId}: {ErrorMessage}", routerId, getResult.ErrorMessage);
                     return ApiResponse<IpPoolResponse>.Warning("Pool actualizado pero no se pudo recuperar la lista de pools para confirmar", null);
                 }
 
@@ -409,20 +435,14 @@ namespace MikroClean.Application.Services
                 }
                 else
                 {
-                    _logger.LogWarning("No se pudo encontrar el pool actualizado con ID {PoolId} en router {RouterId} después de la actualización", updateIpPoolRequest.Id, routerId);
+                    _logger.LogWarning("No se pudo encontrar el pool actualizado con ID {PoolId} en router {RouterId} despus de la actualizacin", updateIpPoolRequest.Id, routerId);
                     return ApiResponse<IpPoolResponse>.Warning("Pool actualizado pero no se pudo confirmar su existencia en la lista de pools", null);
-
                 }
-
             }
-
-
             catch (Exception ex)
             {
-
                 _logger.LogError(ex, "Error actualizando IP pool en router {RouterId}", routerId);
                 return ApiResponse<IpPoolResponse>.Error($"Error inesperado: {ex.Message}");
-
             }
         }
 

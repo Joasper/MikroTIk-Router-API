@@ -2,6 +2,7 @@ using MikroClean.Application.Interfaces;
 using MikroClean.Domain.MikroTik.Operations;
 using MikroClean.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
+using MikroClean.Application.Models;
 
 namespace MikroClean.WebAPI.Controllers
 {
@@ -18,10 +19,10 @@ namespace MikroClean.WebAPI.Controllers
             _mikroTikService = mikroTikService;
         }
 
-        // ============= GESTIÓN DE CONEXIONES =============
+        // ============= GESTIï¿½N DE CONEXIONES =============
 
         /// <summary>
-        /// Prueba la conexión a un router específico
+        /// Prueba la conexiï¿½n a un router especï¿½fico
         /// GET: api/mikrotik/routers/{routerId}/test-connection
         /// </summary>
         [HttpGet("routers/{routerId}/test-connection")]
@@ -32,7 +33,7 @@ namespace MikroClean.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Obtiene el estado de conexión de un router
+        /// Obtiene el estado de conexiï¿½n de un router
         /// GET: api/mikrotik/routers/{routerId}/status
         /// </summary>
         [HttpGet("routers/{routerId}/status")]
@@ -43,7 +44,7 @@ namespace MikroClean.WebAPI.Controllers
         }
 
         /// <summary>
-        /// Pre-calienta las conexiones de una organización
+        /// Pre-calienta las conexiones de una organizaciï¿½n
         /// POST: api/mikrotik/organizations/{organizationId}/warm-up
         /// </summary>
         [HttpPost("organizations/{organizationId}/warm-up")]
@@ -91,7 +92,7 @@ namespace MikroClean.WebAPI.Controllers
         // ============= IP ADDRESS =============
 
         /// <summary>
-        /// Agrega una dirección IP a una interfaz
+        /// Agrega una direcciï¿½n IP a una interfaz
         /// POST: api/mikrotik/routers/{routerId}/ip/address
         /// </summary>
         [HttpPost("routers/{routerId}/ip/address")]
@@ -117,13 +118,13 @@ namespace MikroClean.WebAPI.Controllers
         // ============= IP POOLS =============
 
         /// <summary>
-        /// Obtiene todos los IP pools de un router
+        /// Obtiene los IP pools de un router con paginacin
         /// GET: api/mikrotik/routers/{routerId}/ip/pools
         /// </summary>
         [HttpGet("routers/{routerId}/ip/pools")]
-        public async Task<IActionResult> GetAllIpPools(int routerId)
+        public async Task<IActionResult> GetAllIpPools(int routerId, [FromQuery] PaginationParams paginationParams)
         {
-            var response = await _mikroTikService.GetAllIpPoolsAsync(routerId);
+            var response = await _mikroTikService.GetIpPoolsPagedAsync(routerId, paginationParams);
             return HandleResponse(response);
         }
 
@@ -265,7 +266,7 @@ namespace MikroClean.WebAPI.Controllers
         // ============= SYSTEM INFO =============
 
         /// <summary>
-        /// Obtiene información de recursos del sistema
+        /// Obtiene informaciï¿½n de recursos del sistema
         /// GET: api/mikrotik/routers/{routerId}/system/resources
         /// </summary>
         //[HttpGet("routers/{routerId}/system/resources")]
