@@ -20,5 +20,10 @@ namespace MikroClean.Infrastructure.Repositories.UOW
         {
             return await ctx.SaveChangesAsync();
         }
+
+        public void ClearChangeTracker()
+        {
+            ctx.ChangeTracker.Clear();
+        }
     }
 }

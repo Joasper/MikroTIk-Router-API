@@ -11,11 +11,12 @@ using Microsoft.Extensions.Logging;
 namespace MikroClean.Application.Services
 {
     /// <summary>
-    /// Servicio para gestión de routers con encriptación automática de passwords
+    /// Servicio para gestiï¿½n de routers con encriptaciï¿½n automï¿½tica de passwords
     /// </summary>
     public class RouterService : IRouterService
     {
         private readonly IRouterRepository _routerRepository;
+        private readonly IPlanRepository _planRepository;
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IEncryptionService _encryptionService;
         private readonly IMikroTikConnectionManager _connectionManager;
@@ -24,6 +25,7 @@ namespace MikroClean.Application.Services
 
         public RouterService(
             IRouterRepository routerRepository,
+            IPlanRepository planRepository,
             IOrganizationRepository organizationRepository,
             IEncryptionService encryptionService,
             IMikroTikConnectionManager connectionManager,
@@ -31,6 +33,7 @@ namespace MikroClean.Application.Services
             ILogger<RouterService> logger)
         {
             _routerRepository = routerRepository;
+            _planRepository = planRepository;
             _organizationRepository = organizationRepository;
             _encryptionService = encryptionService;
             _connectionManager = connectionManager;
@@ -52,7 +55,7 @@ namespace MikroClean.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error obteniendo routers de organización {OrganizationId}", organizationId);
+                _logger.LogError(ex, "Error obteniendo routers de organizaciï¿½n {OrganizationId}", organizationId);
                 return ApiResponse<IEnumerable<RouterDTO>>.Error($"Error al obtener routers: {ex.Message}");
             }
         }
@@ -82,23 +85,23 @@ namespace MikroClean.Application.Services
         {
             try
             {
-                // Validar que la organización existe
+                // Validar que la organizaciï¿½n existe
                 var organization = await _organizationRepository.GetByIdAsync(createDto.OrganizationId);
                 if (organization == null)
                 {
                     return ApiResponse<RouterDTO>.ValidationError(
-                        "Organización no encontrada",
-                        new { OrganizationId = "La organización no existe" }
+                        "Organizaciï¿½n no encontrada",
+                        new { OrganizationId = "La organizaciï¿½n no existe" }
                     );
                 }
 
-                // Validar IP única
+                // Validar IP ï¿½nica
                 var existingRouter = await _routerRepository.GetByIpAsync(createDto.Ip);
                 if (existingRouter != null)
                 {
                     return ApiResponse<RouterDTO>.ValidationError(
                         "Ya existe un router con esa IP",
-                        new { Ip = "La dirección IP ya está registrada" }
+                        new { Ip = "La direcciï¿½n IP ya estï¿½ registrada" }
                     );
                 }
 
@@ -111,7 +114,7 @@ namespace MikroClean.Application.Services
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error encriptando password del router");
-                    return ApiResponse<RouterDTO>.Error("Error al encriptar la contraseña del router");
+                    return ApiResponse<RouterDTO>.Error("Error al encriptar la contraseï¿½a del router");
                 }
 
                 var router = new Router
@@ -130,9 +133,18 @@ namespace MikroClean.Application.Services
                 _routerRepository.Add(router);
                 await _unitOfWork.SaveChangesAsync();
 
+                // Seed de planes comerciales por defecto para el router reciÃ©n creado
+                var defaultPlans = BuildDefaultPlans(router.Id);
+                foreach (var plan in defaultPlans)
+                {
+                    _planRepository.Add(plan);
+                }
+
+                await _unitOfWork.SaveChangesAsync();
+
                 _logger.LogInformation(
-                    "Router {RouterName} creado exitosamente para organización {OrganizationId}",
-                    router.Name, router.OrganizationId
+                    "Router {RouterName} creado exitosamente para organizaciï¿½n {OrganizationId} con {PlanCount} planes por defecto",
+                    router.Name, router.OrganizationId, defaultPlans.Count
                 );
 
                 var routerDto = MapToDto(router);
@@ -145,6 +157,57 @@ namespace MikroClean.Application.Services
             }
         }
 
+        private static List<Plan> BuildDefaultPlans(int routerId)
+        {
+            return new List<Plan>
+            {
+                new()
+                {
+                    RouterId = routerId,
+                    Nombre = "Plan 10MB",
+                    Descripcion = "Plan basico 10Mbps",
+                    VelocidadMbps = 10,
+                    PrecioMensual = 800m,
+                    EsDefault = true,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    RouterId = routerId,
+                    Nombre = "Plan 20MB",
+                    Descripcion = "Plan estandar 20Mbps",
+                    VelocidadMbps = 20,
+                    PrecioMensual = 1200m,
+                    EsDefault = false,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    RouterId = routerId,
+                    Nombre = "Plan 30MB",
+                    Descripcion = "Plan premium 30Mbps",
+                    VelocidadMbps = 30,
+                    PrecioMensual = 1600m,
+                    EsDefault = false,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                },
+                new()
+                {
+                    RouterId = routerId,
+                    Nombre = "Plan 50MB",
+                    Descripcion = "Plan corporativo 50Mbps",
+                    VelocidadMbps = 50,
+                    PrecioMensual = 2400m,
+                    EsDefault = false,
+                    IsActive = true,
+                    CreatedAt = DateTime.UtcNow
+                }
+            };
+        }
+
         public async Task<ApiResponse<RouterDTO>> UpdateRouterAsync(int routerId, UpdateRouterDTO updateDto)
         {
             try
@@ -155,7 +218,7 @@ namespace MikroClean.Application.Services
                     return ApiResponse<RouterDTO>.NotFound("Router no encontrado");
                 }
 
-                // Validar IP única (si cambió)
+                // Validar IP ï¿½nica (si cambiï¿½)
                 if (router.Ip != updateDto.Ip)
                 {
                     var existingRouter = await _routerRepository.GetByIpAsync(updateDto.Ip);
@@ -163,12 +226,12 @@ namespace MikroClean.Application.Services
                     {
                         return ApiResponse<RouterDTO>.ValidationError(
                             "Ya existe otro router con esa IP",
-                            new { Ip = "La dirección IP ya está en uso" }
+                            new { Ip = "La direcciï¿½n IP ya estï¿½ en uso" }
                         );
                     }
                 }
 
-                // Actualizar campos básicos
+                // Actualizar campos bï¿½sicos
                 router.Name = updateDto.Name;
                 router.Ip = updateDto.Ip;
                 router.User = updateDto.User;
@@ -177,20 +240,20 @@ namespace MikroClean.Application.Services
                 router.IsActive = updateDto.IsActive;
                 router.UpdatedAt = DateTime.UtcNow;
 
-                // Actualizar password si se proporcionó
+                // Actualizar password si se proporcionï¿½
                 if (!string.IsNullOrEmpty(updateDto.Password))
                 {
                     try
                     {
                         router.EncryptedPassword = _encryptionService.Encrypt(updateDto.Password);
                         
-                        // Si cambió password, cerrar conexión activa para forzar reconexión
+                        // Si cambiï¿½ password, cerrar conexiï¿½n activa para forzar reconexiï¿½n
                         await _connectionManager.DisconnectRouterAsync(routerId);
                     }
                     catch (Exception ex)
                     {
                         _logger.LogError(ex, "Error encriptando nueva password del router {RouterId}", routerId);
-                        return ApiResponse<RouterDTO>.Error("Error al encriptar la nueva contraseña");
+                        return ApiResponse<RouterDTO>.Error("Error al encriptar la nueva contraseï¿½a");
                     }
                 }
 
@@ -219,7 +282,7 @@ namespace MikroClean.Application.Services
                     return ApiResponse<bool>.NotFound("Router no encontrado");
                 }
 
-                // Cerrar conexión activa antes de eliminar
+                // Cerrar conexiï¿½n activa antes de eliminar
                 await _connectionManager.DisconnectRouterAsync(routerId);
 
                 // Soft delete
@@ -254,8 +317,8 @@ namespace MikroClean.Application.Services
 
                 if (isConnected)
                 {
-                    // Actualizar información del router desde el dispositivo
-                    // TODO: Obtener versión, MAC address, etc.
+                    // Actualizar informaciï¿½n del router desde el dispositivo
+                    // TODO: Obtener versiï¿½n, MAC address, etc.
                     await _routerRepository.UpdateLastSeenAsync(routerId, DateTime.UtcNow);
                 }
 
@@ -266,8 +329,8 @@ namespace MikroClean.Application.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error probando conexión de router {RouterId}", routerId);
-                return ApiResponse<bool>.Error($"Error al probar conexión: {ex.Message}");
+                _logger.LogError(ex, "Error probando conexiï¿½n de router {RouterId}", routerId);
+                return ApiResponse<bool>.Error($"Error al probar conexiï¿½n: {ex.Message}");
             }
         }
 
@@ -284,7 +347,7 @@ namespace MikroClean.Application.Services
                 if (!router.IsActive)
                 {
                     return ApiResponse<bool>.ValidationError(
-                        "El router está inactivo",
+                        "El router estï¿½ inactivo",
                         new { IsActive = "El router debe estar activo para poder reiniciarlo" }
                     );
                 }
@@ -294,7 +357,7 @@ namespace MikroClean.Application.Services
                 if (result.IsSuccess)
                 {
                     _logger.LogInformation("Router {RouterId} reiniciado exitosamente", routerId);
-                    return ApiResponse<bool>.Success(true, "Router reiniciado exitosamente. El dispositivo se está reiniciando.");
+                    return ApiResponse<bool>.Success(true, "Router reiniciado exitosamente. El dispositivo se estï¿½ reiniciando.");
                 }
                 else
                 {
@@ -323,7 +386,7 @@ namespace MikroClean.Application.Services
         //        if (!router.IsActive)
         //        {
         //            return ApiResponse<IEnumerable<RouterIpPoolDTO>>.ValidationError(
-        //                "El router está inactivo",
+        //                "El router estï¿½ inactivo",
         //                new { IsActive = "El router debe estar activo para obtener los IP Pools" }
         //            );
         //        }

@@ -1,0 +1,37 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build WebAPI",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"MikroClean.WebAPI/MikroClean.WebAPI.csproj"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Build WebAPI no-restore",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"MikroClean.WebAPI/MikroClean.WebAPI.csproj",
+				"--no-restore"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "Build after enrich",
+			"type": "shell",
+			"command": "dotnet",
+			"args": [
+				"build",
+				"MikroClean.WebAPI/MikroClean.WebAPI.csproj",
+				"--no-restore"
+			],
+			"isBackground": false
+		}
+	]
+}

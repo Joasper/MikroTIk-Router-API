@@ -102,10 +102,9 @@ namespace MikroClean.Application.MikroTik.Operations
                     Type = sentence.GetResponseField("type"),
                     MacAddress = sentence.GetResponseField("mac-address") ?? string.Empty,
                     Running = sentence.GetResponseField("running") == "true",
-                    Disabled = sentence.GetResponseField("disabled") == "true",
                     RxBytes = long.TryParse(sentence.GetResponseField("rx-byte"), out var rx) ? rx : 0,
                     TxBytes = long.TryParse(sentence.GetResponseField("tx-byte"), out var tx) ? tx : 0,
-                    Comment = sentence.GetResponseField("comment")
+                    Comment = sentence.GetOptionalField("comment")
                 });
             }
 
@@ -577,6 +576,7 @@ namespace MikroClean.Application.MikroTik.Operations
                         ["password"] = request.Password,
                         ["profile"] = request.Profile,
                         ["service"] = request.Service,
+                        ["disabled"] = request.Disabled ? "yes" : "no",
                     };
                     if (!string.IsNullOrEmpty(request.Comment))
                     {
@@ -609,6 +609,7 @@ namespace MikroClean.Application.MikroTik.Operations
                         Name = response.GetResponseField("name"),
                         Profile = response.GetResponseField("profile"),
                         Service = response.GetResponseField("service"),
+                        Disabled = response.GetResponseField("disabled") == "true" || response.GetResponseField("disabled") == "yes",
                         Comment = response.GetOptionalField("comment")
                     };
                 }
@@ -628,6 +629,7 @@ namespace MikroClean.Application.MikroTik.Operations
                             Name = sentence.GetResponseField("name"),
                             Profile = sentence.GetResponseField("profile"),
                             Service = sentence.GetResponseField("service"),
+                            Disabled = sentence.GetResponseField("disabled") == "true" || sentence.GetResponseField("disabled") == "yes",
                             Comment = sentence.GetOptionalField("comment")
                         });
                     }
@@ -676,6 +678,10 @@ namespace MikroClean.Application.MikroTik.Operations
                     {
                         parameters["service"] = request.Service;
                     }
+                    if (request.Disabled.HasValue)
+                    {
+                        parameters["disabled"] = request.Disabled.Value ? "yes" : "no";
+                    }
                     if (!string.IsNullOrEmpty(request.Comment))
                     {
                         parameters["comment"] = request.Comment;
@@ -703,6 +709,7 @@ namespace MikroClean.Application.MikroTik.Operations
                         ["max-mru"] = request.MaxMRU,
                         ["keepalive-timeout"] = request.KeepAliveTimeOut,
                         ["one-session-per-host"] = request.OneSesionPerHost,
+                        ["disabled"] = "no"
                     };
                     if (!string.IsNullOrEmpty(request.Comment))
                     {
@@ -831,6 +838,72 @@ namespace MikroClean.Application.MikroTik.Operations
                 public PPPoEServerResponse ParseResponse(string? rawResponse)
                 {
                     return new PPPoEServerResponse();
+                }
+            }
+
+
+            public class GetAllPPPoEActiveConnectionsQuery : IMikroTikQuery<List<PPPoEActiveConnectionResponse>>
+            {
+                public string Command => "/ppp/active/print";
+                public List<PPPoEActiveConnectionResponse> ParseResponse(IEnumerable<ITikSentence> responses)
+                {
+                    var connections = new List<PPPoEActiveConnectionResponse>();
+                    foreach (var sentence in responses)
+                    {
+                        connections.Add(new PPPoEActiveConnectionResponse
+                        {
+                            Id = sentence.GetResponseField(".id"),
+                            Name = sentence.GetResponseField("name"),
+                            Service = sentence.GetResponseField("service"),
+                            CallerId = sentence.GetResponseField("caller-id"),
+                            Address = sentence.GetResponseField("address"),
+                            Uptime = sentence.GetResponseField("uptime")
+                        });
+                    }
+                    return connections;
+                }
+            }
+
+            public class DeletePPPoEActiveConnectionOperation : IMikroTikMutation<DeletePPPoEActiveConnectionRequest, PPPoEActiveConnectionResponse>
+            {
+                public string Command => "/ppp/active/remove";
+
+                public Dictionary<string, string> BuildParameters(DeletePPPoEActiveConnectionRequest request)
+                {
+                    return new Dictionary<string, string>
+                    {
+                        [".id"] = request.Id.Trim().ToLower()
+                    };
+                }
+
+                public PPPoEActiveConnectionResponse ParseResponse(string? rawResponse)
+                {
+                    return new PPPoEActiveConnectionResponse
+                    {
+                        Id = rawResponse ?? string.Empty
+                    };
+                }
+            }
+
+            public class GetResourcesRouterQuery : IMikroTikQuery<ResourcesRouterResponse>
+            {
+                public string Command => "/system/resource/print";
+                public ResourcesRouterResponse ParseResponse(IEnumerable<ITikSentence> responses)
+                {
+                    var sentence = responses.FirstOrDefault();
+                    if (sentence == null) return new ResourcesRouterResponse();
+                    return new ResourcesRouterResponse
+                    {
+                        Version = sentence.GetResponseField("version"),
+                        BoardName = sentence.GetResponseField("board-name"),
+                        Architecture = sentence.GetResponseField("architecture-name"),
+                        TotalMemory = long.TryParse(sentence.GetResponseField("total-memory"), out var totalMemory) ? totalMemory : 0,
+                        FreeMemory = long.TryParse(sentence.GetResponseField("free-memory"), out var freeMemory) ? freeMemory : 0,
+                        CpuLoad = double.TryParse(sentence.GetResponseField("cpu-load"), out var cpuLoad) ? cpuLoad : 0,
+                        TotalHddSpace = long.TryParse(sentence.GetResponseField("total-hdd-space"), out var totalHddSpace) ? totalHddSpace : 0,
+                        FreeHddSpace = long.TryParse(sentence.GetResponseField("free-hdd-space"), out var freeHddSpace) ? freeHddSpace : 0,
+                        Uptime = sentence.GetResponseField("uptime")
+                    };
                 }
             }
 

@@ -217,6 +217,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string Ranges { get; set; } = string.Empty;
         public string NextPool { get; set; } = string.Empty;
         public string Comment { get; set; } = string.Empty;
+        public string SyncState { get; set; } = "synced";
 
 
     }
@@ -263,6 +264,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string RateLimit { get; set; } = string.Empty;
         public string OnlyOne { get; set; } = "default";
         public string Comment { get; set; } = string.Empty;
+        public string SyncState { get; set; } = "synced";
 
     }
 
@@ -273,6 +275,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string Password { get; set; } = string.Empty;
         public string Service { get; set; } = "pppoe";
         public string Profile { get; set; } = string.Empty;
+        public bool Disabled { get; set; } = false;
         public string Comment { get; set; } = string.Empty;
     }
 
@@ -285,6 +288,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string Profile { get; set; } = string.Empty;
         public bool Disabled { get; set; }
         public string Comment { get; set; } = string.Empty;
+        public string SyncState { get; set; } = "synced";
     }
 
     public class UpdatePPPoESecretRequest
@@ -294,6 +298,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string? Password { get; set; }
         public string? Service { get; set; }
         public string? Profile { get; set; }
+        public bool? Disabled { get; set; }
         public string? Comment { get; set; }
     }
 
@@ -327,6 +332,7 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string OneSesionPerHost { get; set; } = "yes";
         public bool Disabled { get; set; }
         public string Comment { get; set; } = string.Empty;
+        public string SyncState { get; set; } = "synced";
 
     }
 
@@ -348,4 +354,41 @@ namespace MikroClean.Domain.MikroTik.Operations
         public string Id { get; set; }
     }
 
+
+    public class PPPoEActiveConnectionResponse
+    {
+        public string Id { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Service { get; set; } = string.Empty;
+        public string CallerId { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
+        public string Uptime { get; set; } = string.Empty;
+
+        // Enriquecimiento comercial
+        public bool TieneClienteAsociado { get; set; }
+        public int? ClienteId { get; set; }
+        public string? ClienteNombre { get; set; }
+        public string? PlanNombre { get; set; }
+        public int? PlanVelocidadMbps { get; set; }
+        public string? EstadoSuscripcion { get; set; }
+    }
+
+    public class DeletePPPoEActiveConnectionRequest
+    {
+        public string Id { get; set; }
+
+    }
+
+    public class ResourcesRouterResponse
+    {
+        public string Version { get; set; } = string.Empty;
+        public string BoardName { get; set; } = string.Empty;
+        public string Architecture { get; set; } = string.Empty;
+        public long TotalMemory { get; set; }
+        public long FreeMemory { get; set; }
+        public double CpuLoad { get; set; }
+        public long TotalHddSpace { get; set; }
+        public long FreeHddSpace { get; set; }
+        public string Uptime { get; set; }
+    }
 }

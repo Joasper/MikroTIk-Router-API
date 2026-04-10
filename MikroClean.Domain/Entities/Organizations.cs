@@ -12,5 +12,6 @@ namespace MikroClean.Domain.Entities
         public License? License { get; set; }
         public ICollection<User> Users { get; set; } = new List<User>();
         public ICollection<Router> Routers { get; set; } = new List<Router>();
+        public ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
     }
 }

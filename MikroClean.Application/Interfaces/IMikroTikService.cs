@@ -26,6 +26,11 @@ namespace MikroClean.Application.Interfaces
         /// </summary>
         Task<ApiResponse<Dictionary<int, bool>>> WarmUpOrganizationConnectionsAsync(int organizationId);
 
+        /// <summary>
+        /// Procesa en background los cambios pendientes en routers que ya est�n en l�nea
+        /// </summary>
+        Task ProcessPendingChangesAsync(CancellationToken cancellationToken = default);
+
         // ============= INTERFACES =============
         
         /// <summary>
@@ -62,7 +67,7 @@ namespace MikroClean.Application.Interfaces
         /// <summary>
         /// Obtiene informaci�n de recursos del sistema
         /// </summary>
-        //Task<ApiResponse<FirewallRuleResponse>> CreateFirewallRuleAsync(int routerId, CreateFirewallRuleRequest request);
+        Task<ApiResponse<ResourcesRouterResponse>> GetResourcesRouterAsync(int routerId);
 
         // ============= IP POOLS =============
 
@@ -94,10 +99,12 @@ namespace MikroClean.Application.Interfaces
         Task<ApiResponse<PPPoESecretResponse>> UpdatePPPoESecretAsync(int routerId, UpdatePPPoESecretRequest updatePPPoESecret);
         Task<ApiResponse<PPPoESecretResponse>> DeletePPPoESecretAsync(int routerId, DeletePPPoESecretRequest request);
 
-        Task<ApiResponse<List<PPPoEServerResponse>>> GetAllPPPoEServerAsync(int routerId);
+        Task<ApiResponse<PagedResult<PPPoEServerResponse>>> GetPPPoEServersPagedAsync(int routerId, PaginationParams paginationParams);
         Task<ApiResponse<PPPoEServerResponse>> CreatePPPoEServerAsync(int routerId, CreatePPPoEServerRequest createPPPoEServer);
         Task<ApiResponse<PPPoEServerResponse>> UpdatePPPoEServerAsync(int routerId, UpdatePPPoEServerRequest updatePPPoEServer);
         Task<ApiResponse<PPPoEServerResponse>> DeletePPPoEServerAsync(int routerId, DeletePPPoEServerRequest request);
+        Task<ApiResponse<PagedResult<PPPoEActiveConnectionResponse>>> GetActivePPPoEConnectionsAsync(int routerId, PaginationParams paginationParams);
+        Task<ApiResponse<PPPoEActiveConnectionResponse>> DeleteActivePPPoEConnectionAsync(int routerId, DeletePPPoEActiveConnectionRequest request);
 
 
 

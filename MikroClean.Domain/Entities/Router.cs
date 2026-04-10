@@ -23,5 +23,15 @@ namespace MikroClean.Domain.Entities
         public ICollection<UserRouterAccess> UserAccesses { get; set; } = new List<UserRouterAccess>();
         public RouterStatus? RouterStatus { get; set; }
         public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
+
+        // MikroTik Entities
+        public ICollection<IpPool> IpPools { get; set; } = new List<IpPool>();
+        public ICollection<PppProfile> PppProfiles { get; set; } = new List<PppProfile>();
+        public ICollection<PppSecret> PppSecrets { get; set; } = new List<PppSecret>();
+        public ICollection<PppServer> PppServers { get; set; } = new List<PppServer>();
+        public ICollection<PendingChange> PendingChanges { get; set; } = new List<PendingChange>();
+
+        // Billing Entities
+        public ICollection<Plan> Planes { get; set; } = new List<Plan>();
     }
 }

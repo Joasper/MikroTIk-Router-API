@@ -232,9 +232,9 @@ namespace MikroClean.WebAPI.Controllers
 
 
         [HttpGet("routers/{routerId}/ppp/server")]
-        public async Task<IActionResult> GetPppServer(int routerId)
+        public async Task<IActionResult> GetPppServer(int routerId, [FromQuery] PaginationParams paginationParams)
         {
-            var response = await _mikroTikService.GetAllPPPoEServerAsync(routerId);
+            var response = await _mikroTikService.GetPPPoEServersPagedAsync(routerId, paginationParams);
             return HandleResponse(response);
         }
 
@@ -259,6 +259,20 @@ namespace MikroClean.WebAPI.Controllers
             return HandleResponse(response);
         }
 
+        [HttpGet("routers/{routerId}/ppp/active")]
+        public async Task<IActionResult> GetActivePppConnectionsAsync(int routerId, [FromQuery] PaginationParams paginationParams)
+        {
+            var response = await _mikroTikService.GetActivePPPoEConnectionsAsync(routerId, paginationParams);
+            return HandleResponse(response);
+        }
+
+        [HttpDelete("routers/{routerId}/ppp/active")]
+        public async Task<IActionResult> DeleteActivePppConnectionAsync(int routerId, DeletePPPoEActiveConnectionRequest request)
+        {
+            var response = await _mikroTikService.DeleteActivePPPoEConnectionAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
 
 
 
@@ -269,11 +283,11 @@ namespace MikroClean.WebAPI.Controllers
         /// Obtiene informaci�n de recursos del sistema
         /// GET: api/mikrotik/routers/{routerId}/system/resources
         /// </summary>
-        //[HttpGet("routers/{routerId}/system/resources")]
-        //public async Task<IActionResult> GetSystemResources(int routerId)
-        //{
-        //    var response = await _mikroTikService.GetSystemResourcesAsync(routerId);
-        //    return HandleResponse(response);
-        //}
+        [HttpGet("routers/{routerId}/system/resources")]
+        public async Task<IActionResult> GetSystemResources(int routerId)
+        {
+            var response = await _mikroTikService.GetResourcesRouterAsync(routerId);
+            return HandleResponse(response);
+        }
     }
 }

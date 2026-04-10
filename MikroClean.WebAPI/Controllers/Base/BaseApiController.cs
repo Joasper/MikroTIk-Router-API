@@ -7,13 +7,14 @@ namespace MikroClean.WebAPI.Controllers.Base
     public class BaseApiController : ControllerBase
     {
         /// <summary>
-        /// Convierte ApiResponse en IActionResult con el código HTTP apropiado
+        /// Convierte ApiResponse en IActionResult con el cï¿½digo HTTP apropiado
         /// </summary>
         protected IActionResult HandleResponse<T>(ApiResponse<T> response)
         {
             return response.Status switch
             {
                 ResponseStatus.Success => Ok(response),
+                ResponseStatus.Warning => Accepted(response),
                 ResponseStatus.NotFound => NotFound(response),
                 ResponseStatus.ValidationError => BadRequest(response),
                 ResponseStatus.Unauthorized => Unauthorized(response),
@@ -26,7 +27,7 @@ namespace MikroClean.WebAPI.Controllers.Base
         /// <summary>
         /// Convierte errores de ModelState en ApiResponse
         /// </summary>
-        protected IActionResult HandleValidationError(string message = "Datos de entrada inválidos")
+        protected IActionResult HandleValidationError(string message = "Datos de entrada invï¿½lidos")
         {
             var errors = ModelState
                 .Where(x => x.Value?.Errors.Count > 0)

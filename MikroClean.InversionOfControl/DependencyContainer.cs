@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using MikroClean.Application.BackgroundServices;
 using MikroClean.Application.Interfaces;
 using MikroClean.Application.Services;
 using MikroClean.Domain.Interfaces.Repositories;
@@ -28,18 +29,36 @@ namespace MikroClean.InversionOfControl
             // Repositories
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IRouterRepository, RouterRepository>();
+            services.AddScoped<IPlanRepository, PlanRepository>();
+            services.AddScoped<IClienteRepository, ClienteRepository>();
+            services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+            services.AddScoped<IBillingTemplateRepository, BillingTemplateRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<ITaxRepository, TaxRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILicenseRepository, LicenseRepository>();
             services.AddScoped<ISystemRoleRepository, SystemRoleRepository>();
+            
+            // MikroTik Repositories
+            services.AddScoped<IIpPoolRepository, IpPoolRepository>();
+            services.AddScoped<IPppProfileRepository, PppProfileRepository>();
+            services.AddScoped<IPppSecretRepository, PppSecretRepository>();
+            services.AddScoped<IPppServerRepository, PppServerRepository>();
+            services.AddScoped<IPendingChangeRepository, PendingChangeRepository>();
             
             // Application Services
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IRouterService, RouterService>();
             services.AddScoped<IMikroTikService, MikroTikService>();
+            services.AddScoped<IBillingService, BillingService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILicenseService, LicenseService>();
             services.AddScoped<ISystemRoleService, SystemRoleService>();
             services.AddScoped<IAuthService, AuthService>();
+
+            // Background processing
+            services.AddHostedService<PendingChangesProcessorService>();
             
             // Security Services
             services.AddSingleton<IEncryptionService, AesEncryptionService>();
@@ -73,19 +92,15 @@ namespace MikroClean.InversionOfControl
         {
             var connectionString = configuration.GetConnectionString("Connection");
             services.AddDbContext<MikroCleanContext>(options => options.UseSqlServer(connectionString));
+            
             return services;
         }
         
-        public static IServiceCollection AutomaticMigrate(this IServiceCollection services)
+        public static async Task ApplyMigrationsAsync(this IServiceProvider serviceProvider, CancellationToken cancellationToken = default)
         {
-            var serviceProvider = services.BuildServiceProvider();
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<MikroCleanContext>();
-                context.Database.EnsureCreated();
-                context.Database.MigrateAsync();
-            }
-            return services;
+            using var scope = serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<MikroCleanContext>();
+            await context.Database.MigrateAsync();
         }
 
         public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)

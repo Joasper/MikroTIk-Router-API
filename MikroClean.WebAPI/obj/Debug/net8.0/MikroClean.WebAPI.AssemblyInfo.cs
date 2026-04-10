@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f26bd53f02ba06f727759b78157c23e58ad13ce7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d127e998f27a58d5fe78489e6fd97fcb5d743afb")]
 [assembly: System.Reflection.AssemblyProductAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MikroClean.WebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

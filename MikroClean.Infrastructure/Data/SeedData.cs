@@ -19,7 +19,7 @@ namespace MikroClean.Infrastructure.Data
             // Seed Default SuperAdmin User
             // Username: superadmin
             // Password: Admin123!
-            // IMPORTANTE: Cambiar esta contraseña después del primer acceso
+            // IMPORTANTE: Cambiar esta contraseï¿½a despuï¿½s del primer acceso
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -45,16 +45,16 @@ namespace MikroClean.Infrastructure.Data
                 new SystemPermission { Id = 6, Name = "MANAGE_ROUTERS", Description = "Gestionar routers", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
                 new SystemPermission { Id = 7, Name = "VIEW_USERS", Description = "Ver usuarios", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
                 new SystemPermission { Id = 8, Name = "MANAGE_USERS", Description = "Gestionar usuarios", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new SystemPermission { Id = 9, Name = "VIEW_AUDIT_LOGS", Description = "Ver logs de auditoría", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new SystemPermission { Id = 10, Name = "MANAGE_BILLING", Description = "Gestionar facturación", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+                new SystemPermission { Id = 9, Name = "VIEW_AUDIT_LOGS", Description = "Ver logs de auditorï¿½a", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+                new SystemPermission { Id = 10, Name = "MANAGE_BILLING", Description = "Gestionar facturaciï¿½n", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
             );
 
             // Seed RouterRoles
             modelBuilder.Entity<RouterRole>().HasData(
                 new RouterRole { Id = 1, Name = "NetworkAdmin", Description = "Administrador completo del router", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
                 new RouterRole { Id = 2, Name = "UserManager", Description = "Gestiona usuarios del router", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new RouterRole { Id = 3, Name = "Viewer", Description = "Solo visualización", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new RouterRole { Id = 4, Name = "Technician", Description = "Técnico de soporte", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+                new RouterRole { Id = 3, Name = "Viewer", Description = "Solo visualizaciï¿½n", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+                new RouterRole { Id = 4, Name = "Technician", Description = "Tï¿½cnico de soporte", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
             );
 
             // Seed RouterPermissions
@@ -67,8 +67,8 @@ namespace MikroClean.Infrastructure.Data
                 new RouterPermission { Id = 6, Name = "VIEW_LOGS", Description = "Ver logs del router", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
                 new RouterPermission { Id = 7, Name = "MANAGE_DHCP", Description = "Gestionar DHCP", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
                 new RouterPermission { Id = 8, Name = "MANAGE_QOS", Description = "Gestionar QoS", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new RouterPermission { Id = 9, Name = "VIEW_STATISTICS", Description = "Ver estadísticas", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
-                new RouterPermission { Id = 10, Name = "BACKUP_CONFIG", Description = "Backup de configuración", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
+                new RouterPermission { Id = 9, Name = "VIEW_STATISTICS", Description = "Ver estadï¿½sticas", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) },
+                new RouterPermission { Id = 10, Name = "BACKUP_CONFIG", Description = "Backup de configuraciï¿½n", CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc) }
             );
 
             // Seed SystemRolePermissions (SuperAdmin tiene todos los permisos)
@@ -125,6 +125,20 @@ namespace MikroClean.Infrastructure.Data
                 new RouterRolePermission { RoleId = 4, PermissionId = 6 },
                 new RouterRolePermission { RoleId = 4, PermissionId = 9 },
                 new RouterRolePermission { RoleId = 4, PermissionId = 10 }
+            );
+
+            // Seed Tax Catalog (RD)
+            modelBuilder.Entity<Tax>().HasData(
+                new Tax
+                {
+                    Id = 1,
+                    Nombre = "ITBIS",
+                    Descripcion = "Impuesto sobre Transferencias de Bienes Industrializados y Servicios",
+                    Porcentaje = 18.00m,
+                    IsActive = true,
+                    Notas = "Tasa estandar RD",
+                    CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
             );
         }
     }

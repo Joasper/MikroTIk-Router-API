@@ -1,13 +1,13 @@
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MikroClean.Domain.MikroTik;
 using System.Diagnostics;
+using System.Net.Sockets;
 using tik4net;
 using DomainITikSentence = MikroClean.Domain.MikroTik.ITikSentence;
 
 namespace MikroClean.Infrastructure.MikroTik
 {
     /// <summary>
-    /// Cliente wrapper para tik4net con manejo de conexión y estado
+    /// Cliente wrapper para tik4net con manejo de conexion y estado
     /// </summary>
     public class MikroTikClient : IMikroTikClient
     {
@@ -25,36 +25,70 @@ namespace MikroClean.Infrastructure.MikroTik
             if (_disposed)
                 throw new ObjectDisposedException(nameof(MikroTikClient));
 
-            lock (_lock)
+            return await Task.Run(() =>
             {
-                if (IsConnected)
-                    return true;
-
-                try
+                lock (_lock)
                 {
-                    RouterId = connectionInfo.RouterId;
-                    
-                    _connection = ConnectionFactory.CreateConnection(TikConnectionType.Api);
-                    _connection.ReceiveTimeout = (int)connectionInfo.CommandTimeout.TotalMilliseconds;
-                    _connection.SendTimeout = (int)connectionInfo.ConnectionTimeout.TotalMilliseconds;
+                    if (IsConnected)
+                        return true;
 
-                    // Conectar de forma síncrona (tik4net no soporta async nativamente)
-                    _connection.Open(
-                        connectionInfo.Ip,
-                        connectionInfo.Port,
-                        connectionInfo.Username,
-                        connectionInfo.Password
-                    );
+                    try
+                    {
+                        // Fast-fail probe to avoid long blocking socket timeouts when host is offline.
+                        EnsureTcpEndpointReachable(connectionInfo.Ip, connectionInfo.Port, connectionInfo.ConnectionTimeout);
 
-                    _lastActivity = DateTime.UtcNow;
-                    return true;
+                        RouterId = connectionInfo.RouterId;
+
+                        _connection = ConnectionFactory.CreateConnection(TikConnectionType.Api);
+                        _connection.ReceiveTimeout = (int)connectionInfo.CommandTimeout.TotalMilliseconds;
+                        _connection.SendTimeout = (int)connectionInfo.ConnectionTimeout.TotalMilliseconds;
+
+                        // tik4net no soporta async nativo; se ejecuta en hilo worker para no bloquear la request.
+                        _connection.Open(
+                            connectionInfo.Ip,
+                            connectionInfo.Port,
+                            connectionInfo.Username,
+                            connectionInfo.Password
+                        );
+
+                        _lastActivity = DateTime.UtcNow;
+                        return true;
+                    }
+                    catch (SocketException)
+                    {
+                        _connection?.Dispose();
+                        _connection = null;
+                        return false;
+                    }
+                    catch (TimeoutException)
+                    {
+                        _connection?.Dispose();
+                        _connection = null;
+                        return false;
+                    }
+                    catch
+                    {
+                        _connection?.Dispose();
+                        _connection = null;
+                        throw;
+                    }
                 }
-                catch
-                {
-                    _connection?.Dispose();
-                    _connection = null;
-                    throw;
-                }
+            }, cancellationToken);
+        }
+
+        private static void EnsureTcpEndpointReachable(string host, int port, TimeSpan timeout)
+        {
+            using var tcpClient = new TcpClient();
+            var connectTask = tcpClient.ConnectAsync(host, port);
+
+            if (!connectTask.Wait(timeout))
+            {
+                throw new TimeoutException($"Timeout conectando a {host}:{port}");
+            }
+
+            if (connectTask.IsFaulted)
+            {
+                throw connectTask.Exception?.InnerException ?? new SocketException();
             }
         }
 
@@ -90,7 +124,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 lock (_lock)
                 {
                     if (!IsConnected || _connection == null)
-                        throw new InvalidOperationException("No hay conexión activa con el router");
+                        throw new InvalidOperationException("No hay conexion activa con el router");
 
                     try
                     {
@@ -135,7 +169,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 lock (_lock)
                 {
                     if (!IsConnected || _connection == null)
-                        throw new InvalidOperationException("No hay conexión activa con el router");
+                        throw new InvalidOperationException("No hay conexion activa con el router");
 
                     try
                     {
@@ -178,7 +212,7 @@ namespace MikroClean.Infrastructure.MikroTik
                 lock (_lock)
                 {
                     if (!IsConnected || _connection == null)
-                        throw new InvalidOperationException("No hay conexión activa con el router");
+                        throw new InvalidOperationException("No hay conexion activa con el router");
 
                     try
                     {
@@ -211,7 +245,7 @@ namespace MikroClean.Infrastructure.MikroTik
         private void HandleConnectionLost(Exception innerException)
         {
             CleanupConnection();
-            throw new InvalidOperationException($"Conexión perdida con router {RouterId}", innerException);
+            throw new InvalidOperationException($"Conexion perdida con router {RouterId}", innerException);
         }
 
         private void CleanupConnection()

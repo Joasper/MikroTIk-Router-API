@@ -3,5 +3,6 @@
     public interface IUnitOfWork : IDisposable
     {
        Task<int> SaveChangesAsync();
+       void ClearChangeTracker();
     }
 }

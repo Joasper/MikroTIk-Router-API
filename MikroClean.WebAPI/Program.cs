@@ -25,9 +25,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Automatically apply pending migrations to the database on application startup
-builder.Services.AutomaticMigrate();
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -36,6 +33,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Apply pending migrations once the full application service provider is built.
+await app.Services.ApplyMigrationsAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

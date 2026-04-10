@@ -26,6 +26,25 @@ public class MikroCleanContext : DbContext
     public DbSet<RouterStatus> RouterStatus { get; set; }
     public DbSet<AuditLog> AuditLogs { get; set; }
 
+    // MikroTik Entities
+    public DbSet<IpPool> IpPools { get; set; }
+    public DbSet<PppProfile> PppProfiles { get; set; }
+    public DbSet<PppSecret> PppSecrets { get; set; }
+    public DbSet<PppServer> PppServers { get; set; }
+    public DbSet<PendingChange> PendingChanges { get; set; }
+
+    // Billing Entities
+    public DbSet<Cliente> Clientes { get; set; }
+    public DbSet<Plan> Planes { get; set; }
+    public DbSet<Subscription> Subscripciones { get; set; }
+    public DbSet<BillingTemplate> BillingTemplates { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<InvoiceDetail> InvoiceDetails { get; set; }
+    public DbSet<Payment> Payments { get; set; }
+    public DbSet<PaymentInvoiceMapping> PaymentInvoiceMappings { get; set; }
+    public DbSet<Tax> Taxes { get; set; }
+    public DbSet<FiscalVoucher> FiscalVouchers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Apply all configurations

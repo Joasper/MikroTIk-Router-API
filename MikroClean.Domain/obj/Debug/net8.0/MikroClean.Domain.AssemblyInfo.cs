@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MikroClean.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a16ebfd09c7404d070c66ad3e1f1343a50d97702")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d127e998f27a58d5fe78489e6fd97fcb5d743afb")]
 [assembly: System.Reflection.AssemblyProductAttribute("MikroClean.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MikroClean.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
