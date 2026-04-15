@@ -63,5 +63,7 @@ namespace MikroClean.Domain.MikroTik
         string GetResponseField(string fieldName);
         string GetOptionalField(string fieldName);
         IEnumerable<string> GetAllWords();
+        IReadOnlyDictionary<string, string> GetAllFields();
+
     }
 }

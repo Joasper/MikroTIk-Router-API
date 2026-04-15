@@ -3,6 +3,7 @@ using MikroClean.Domain.MikroTik.Operations;
 using MikroClean.WebAPI.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
 using MikroClean.Application.Models;
+using MikroClean.Application.Dtos.Interfaces;
 
 namespace MikroClean.WebAPI.Controllers
 {
@@ -13,10 +14,12 @@ namespace MikroClean.WebAPI.Controllers
     public class MikroTikController : BaseApiController
     {
         private readonly IMikroTikService _mikroTikService;
+        private readonly IInterfaceService _interfaceService;
 
-        public MikroTikController(IMikroTikService mikroTikService)
+        public MikroTikController(IMikroTikService mikroTikService, IInterfaceService interfaceService)
         {
             _mikroTikService = mikroTikService;
+            _interfaceService = interfaceService;
         }
 
         // ============= GESTI�N DE CONEXIONES =============
@@ -86,6 +89,82 @@ namespace MikroClean.WebAPI.Controllers
         public async Task<IActionResult> GetAllInterfaces(int routerId)
         {
             var response = await _mikroTikService.GetAllInterfacesAsync(routerId);
+            return HandleResponse(response);
+        }
+
+        // ============= GESTIÓN DE INTERFACES (Módulo Completo) =============
+
+        /// <summary>
+        /// Obtiene todas las interfaces de un router con paginación y filtrado
+        /// GET: api/mikrotik/routers/{routerId}/interfaces/paged
+        /// </summary>
+        [HttpGet("routers/{routerId}/interfaces/paged")]
+        public async Task<IActionResult> GetInterfacesPaged(
+            int routerId,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 20,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] string? sortBy = null,
+            [FromQuery] bool sortDescending = false,
+            [FromQuery] string? typeFilter = null,
+            [FromQuery] bool? runningFilter = null,
+            [FromQuery] bool? disabledFilter = null)
+        {
+            var paginationParams = new PaginationParams
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = searchTerm,
+                SortBy = sortBy,
+                SortDescending = sortDescending
+            };
+
+            var response = await _interfaceService.GetInterfacesPagedAsync(
+                routerId,
+                paginationParams,
+                typeFilter,
+                runningFilter,
+                disabledFilter);
+
+            return HandleResponse(response);
+        }
+
+        /// <summary>
+        /// Obtiene los detalles de una interfaz específica por su MikroTikId
+        /// GET: api/mikrotik/routers/{routerId}/interfaces/{mikroTikId}
+        /// </summary>
+        [HttpGet("routers/{routerId}/interfaces/{mikroTikId}")]
+        public async Task<IActionResult> GetInterface(int routerId, string mikroTikId)
+        {
+            var response = await _interfaceService.GetInterfaceByIdAsync(routerId, mikroTikId);
+            return HandleResponse(response);
+        }
+
+        /// <summary>
+        /// Actualiza una interfaz existente en el router (nombre, MTU, disabled, comment)
+        /// PUT: api/mikrotik/routers/{routerId}/interfaces
+        /// </summary>
+        [HttpPut("routers/{routerId}/interfaces")]
+        public async Task<IActionResult> UpdateInterface(int routerId, [FromBody] UpdateRouterInterfaceDTO request)
+        {
+            if (string.IsNullOrWhiteSpace(request.MikroTikId))
+            {
+                return HandleResponse(ApiResponse<RouterInterfaceResponse>.Error(
+                    "El campo MikroTikId es requerido"));
+            }
+
+            var response = await _interfaceService.UpdateInterfaceAsync(routerId, request);
+            return HandleResponse(response);
+        }
+
+        /// <summary>
+        /// Sincroniza manualmente todas las interfaces del router a la base de datos local
+        /// POST: api/mikrotik/routers/{routerId}/interfaces/sync
+        /// </summary>
+        [HttpPost("routers/{routerId}/interfaces/sync")]
+        public async Task<IActionResult> SyncInterfaces(int routerId)
+        {
+            var response = await _interfaceService.SyncInterfacesAsync(routerId);
             return HandleResponse(response);
         }
 

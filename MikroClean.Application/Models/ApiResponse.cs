@@ -8,6 +8,16 @@ namespace MikroClean.Application.Models
         public object? Errors { get; set; }
         public PaginationMetadata? Pagination { get; set; }
         public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        
+        /// <summary>
+        /// Indica si la respuesta es un warning (éxito con advertencias)
+        /// </summary>
+        public bool IsWarning => Status == ResponseStatus.Warning;
+        
+        /// <summary>
+        /// Indica si la respuesta fue exitosa (success o warning)
+        /// </summary>
+        public bool IsSuccess => Status == ResponseStatus.Success || Status == ResponseStatus.Warning;
 
         // Métodos estáticos para crear respuestas fácilmente
         public static ApiResponse<T> Success(T data, string message = "Operation successful")

@@ -39,6 +39,7 @@ namespace MikroClean.InversionOfControl
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ILicenseRepository, LicenseRepository>();
             services.AddScoped<ISystemRoleRepository, SystemRoleRepository>();
+            services.AddScoped<IRouterInterfaceRepository, RouterInterfaceRepository>();
             
             // MikroTik Repositories
             services.AddScoped<IIpPoolRepository, IpPoolRepository>();
@@ -51,7 +52,10 @@ namespace MikroClean.InversionOfControl
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IRouterService, RouterService>();
             services.AddScoped<IMikroTikService, MikroTikService>();
+            services.AddScoped<IInterfaceService, InterfaceService>();
             services.AddScoped<IBillingService, BillingService>();
+            services.AddScoped<IPlanService, PlanService>();
+            services.AddScoped<ISalesService, SalesService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ILicenseService, LicenseService>();
             services.AddScoped<ISystemRoleService, SystemRoleService>();

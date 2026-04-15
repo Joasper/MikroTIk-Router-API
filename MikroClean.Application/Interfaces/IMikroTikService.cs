@@ -65,14 +65,14 @@ namespace MikroClean.Application.Interfaces
         // ============= SYSTEM INFO =============
 
         /// <summary>
-        /// Obtiene informaci�n de recursos del sistema
+        /// Obtiene informacion de recursos del sistema
         /// </summary>
         Task<ApiResponse<ResourcesRouterResponse>> GetResourcesRouterAsync(int routerId);
 
         // ============= IP POOLS =============
 
         /// <summary>
-        /// Obtiene los pools de IP de un router con paginacin
+        /// Obtiene los pools de IP de un router con paginacion
         /// </summary>
         Task<ApiResponse<PagedResult<IpPoolResponse>>> GetIpPoolsPagedAsync(int routerId, PaginationParams paginationParams);
 
@@ -111,7 +111,7 @@ namespace MikroClean.Application.Interfaces
         // ============= OPERACIONES EN BATCH =============
 
         /// <summary>
-        /// Ejecuta una operaci�n en m�ltiples routers de una organizaci�n
+        /// Ejecuta una operaci�n en multiples routers de una organizaci�n
         /// </summary>
         Task<ApiResponse<Dictionary<int, MikroTikResult<TResponse>>>> ExecuteOnMultipleRoutersAsync<TRequest, TResponse>(
             int organizationId,

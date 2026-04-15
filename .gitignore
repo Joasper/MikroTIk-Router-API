@@ -482,3 +482,45 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# ============================================
+# Caché de aplicación y archivos temporales
+# ============================================
+
+# Caché de aplicación
+cache/
+Cache/
+*.cache
+*.cached
+
+# Caché de navegación web (si aplica)
+.browser-cache/
+
+# Caché de Entity Framework / migraciones
+*.efcache/
+
+# Caché de compilación específica de máquina
+*.cache.tmp
+
+# Directorios de caché de la aplicación
+App_Data/Cache/
+wwwroot/cache/
+temp/
+tmp/
+
+# Caché de Razor (ASP.NET)
+App_Data/RazorCache/
+
+# Caché de imágenes/media
+*.thumb
+media/cache/
+
+# Logs de desarrollo (no producción)
+*.development.log
+
+# Caché de configuración local
+*.local.cache
+appsettings.local.json
+
+# Caché de rendimiento de ASP.NET
+AspNetCache/

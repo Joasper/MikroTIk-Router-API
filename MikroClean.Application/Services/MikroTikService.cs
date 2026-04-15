@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MikroClean.Application.Interfaces;
-using MikroClean.Application.MikroTik.Operations;
 using MikroClean.Application.Models;
 using MikroClean.Domain.Entities;
 using MikroClean.Domain.Enums;
@@ -9,9 +8,18 @@ using MikroClean.Domain.Interfaces.Repositories;
 using MikroClean.Domain.Interfaces.UOW;
 using MikroClean.Domain.MikroTik;
 using MikroClean.Domain.MikroTik.Operations;
+using MikroClean.Domain.MikroTik.Operations.Bridges;
+using MikroClean.Domain.MikroTik.Operations.Firewall;
+using MikroClean.Domain.MikroTik.Operations.Interfaces;
+using MikroClean.Domain.MikroTik.Operations.IpAddresses;
+using MikroClean.Domain.MikroTik.Operations.IpPools;
+using MikroClean.Domain.MikroTik.Operations.PPPoE;
+using MikroClean.Domain.MikroTik.Operations.PPPoE.Profiles;
+using MikroClean.Domain.MikroTik.Operations.PPPoE.Secrets;
+using MikroClean.Domain.MikroTik.Operations.PPPoE.Servers;
+using MikroClean.Domain.MikroTik.Operations.System;
+using MikroClean.Domain.MikroTik.Operations.Vlans;
 using System.Text.Json;
-using static MikroClean.Application.MikroTik.Operations.CreateFirewallRuleOperation;
-using static MikroClean.Application.MikroTik.Operations.CreateFirewallRuleOperation.GetAllIpPoolsQuery;
 
 namespace MikroClean.Application.Services
 {
@@ -712,7 +720,7 @@ namespace MikroClean.Application.Services
                     }
                 }
 
-                var operation = new CreatePPPoEProfileOperation();
+                var operation = new CreatePppProfileOperation();
                 var result = await ExecuteMutationWithTimeoutAsync(routerId, operation, createPPPoEProfile);
                 if (!result.IsSuccess)
                 {
@@ -953,7 +961,7 @@ namespace MikroClean.Application.Services
                     }
                 }
 
-                var operation = new CreatePPPoESecretOperation();
+                var operation = new CreatePppSecretOperation();
                 var result = await ExecuteMutationWithTimeoutAsync(routerId, operation, createPPPoESecret);
                 if (!result.IsSuccess)
                 {
@@ -1192,7 +1200,7 @@ namespace MikroClean.Application.Services
                     }
                 }
 
-                var operation = new CreatePPPoEServerOperation();
+                var operation = new CreatePppServerOperation();
                 var result = await ExecuteMutationWithTimeoutAsync(routerId, operation, createPPPoEServer);
                 if (!result.IsSuccess)
                 {
@@ -2240,7 +2248,7 @@ namespace MikroClean.Application.Services
         {
             return pending.Operation switch
             {
-                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePPPoEProfileOperation(), JsonSerializer.Deserialize<CreatePPPoEProfile>(pending.PayloadJson)),
+                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePppProfileOperation(), JsonSerializer.Deserialize<CreatePPPoEProfile>(pending.PayloadJson)),
                 PendingChangeOperation.Update => await ExecutePendingMutationAsync(routerId, new UpdatePppProfileOperation(), JsonSerializer.Deserialize<UpdatePPPoEProfile>(pending.PayloadJson)),
                 PendingChangeOperation.Delete => await ExecutePendingMutationAsync(routerId, new DeletePppProfileOperation(), JsonSerializer.Deserialize<DeletePPPoEProfile>(pending.PayloadJson)),
                 _ => MikroTikResult<bool>.Failure("Operación pendiente no soportada para PPPoE Profile", MikroTikErrorType.Unknown, routerId)
@@ -2251,7 +2259,7 @@ namespace MikroClean.Application.Services
         {
             return pending.Operation switch
             {
-                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePPPoESecretOperation(), JsonSerializer.Deserialize<CreatePPPoESecretRequest>(pending.PayloadJson)),
+                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePppSecretOperation(), JsonSerializer.Deserialize<CreatePPPoESecretRequest>(pending.PayloadJson)),
                 PendingChangeOperation.Update => await ExecutePendingMutationAsync(routerId, new UpdatePppSecretOperation(), JsonSerializer.Deserialize<UpdatePPPoESecretRequest>(pending.PayloadJson)),
                 PendingChangeOperation.Delete => await ExecutePendingMutationAsync(routerId, new DeletePppSecretOperation(), JsonSerializer.Deserialize<DeletePPPoESecretRequest>(pending.PayloadJson)),
                 _ => MikroTikResult<bool>.Failure("Operación pendiente no soportada para PPPoE Secret", MikroTikErrorType.Unknown, routerId)
@@ -2262,7 +2270,7 @@ namespace MikroClean.Application.Services
         {
             return pending.Operation switch
             {
-                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePPPoEServerOperation(), JsonSerializer.Deserialize<CreatePPPoEServerRequest>(pending.PayloadJson)),
+                PendingChangeOperation.Create => await ExecutePendingMutationAsync(routerId, new CreatePppServerOperation(), JsonSerializer.Deserialize<CreatePPPoEServerRequest>(pending.PayloadJson)),
                 PendingChangeOperation.Update => await ExecutePendingMutationAsync(routerId, new UpdatePppServerOperation(), JsonSerializer.Deserialize<UpdatePPPoEServerRequest>(pending.PayloadJson)),
                 PendingChangeOperation.Delete => await ExecutePendingMutationAsync(routerId, new DeletePppServerOperation(), JsonSerializer.Deserialize<DeletePPPoEServerRequest>(pending.PayloadJson)),
                 _ => MikroTikResult<bool>.Failure("Operación pendiente no soportada para PPPoE Server", MikroTikErrorType.Unknown, routerId)

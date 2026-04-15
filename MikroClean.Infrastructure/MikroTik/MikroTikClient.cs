@@ -303,6 +303,11 @@ namespace MikroClean.Infrastructure.MikroTik
                     return "";
                 }
             }
+
+            public IReadOnlyDictionary<string, string> GetAllFields()
+            {
+                return _sentence.Words;
+            }
         }
     }
 
